@@ -6,18 +6,29 @@
 Official PDF says: 120 questions, 3 marks per question, and 1 mark deducted for a wrong answer. इसलिए इन 20-question practice sets में सही = +3, गलत = −1 और unanswered = 0 रखा गया है। Maximum = 60.
 
 ## Files
-- index.html – main site (Exam News + MCQ Subject Wise + Full Mock — navy/maroon/gold theme). "Hindi" select करके "Start practice" दबाने पर उसी page पर 5 quiz sets के links दिख जाते हैं।
-- hindi-quiz-1.html … hindi-quiz-5.html – 5 separate quiz pages (index.html जैसी navy/maroon/gold theme में, Newsreader + IBM Plex fonts)
+- index.html – main site (news/notification portal) — "Hindi" subject अब सीधे hindi-quiz-hub.html पर ले जाता है
+- hindi-quiz-hub.html – 5 quiz sets की themed listing page
+- hindi-quiz-1.html … hindi-quiz-5.html – 5 separate quiz pages (अब index.html जैसी navy/maroon/gold theme में)
 - quiz-common.js – Firebase Firestore, leaderboard and submission-print logic
-- firebase-config.js – your Firebase Web App config goes here (already filled in — atre-fd3a8 project)
-- configure-firebase.sh – firebase-config.js को Firebase CLI से auto-fill करने वाला script (agar dobara zarurat pade)
+- firebase-config.js – your Firebase Web App config goes here
+- configure-firebase.sh – firebase-config.js को Firebase CLI से auto-fill करने वाला script (नीचे देखें)
 - firestore.rules – starter rules for a public practice leaderboard
-- styles.css – index.html के theme से match करती navy/maroon/gold quiz UI
+- styles.css – index.html के theme से match करती हुई quiz UI (Newsreader + IBM Plex fonts, navy/maroon/gold palette)
 
-## Firebase setup
-1. Firebase Console में अपने project (`atre-fd3a8`) में Firestore Database enable कीजिए (अगर पहले से नहीं किया)।
-2. `firestore.rules` की rules Firebase console → Firestore → Rules में paste करके Publish कीजिए।
-3. सारी files (index.html + baaki सब) को एक ही folder/repo में, root में रखिए — GitHub Pages, Netlify वगैरह पर।
+## Firebase setup (आसान तरीका — script से)
+1. सारी files एक folder में रखें (Node.js installed होना चाहिए)।
+2. Terminal में: `chmod +x configure-firebase.sh && ./configure-firebase.sh`
+3. Script आपसे Firebase login करवाएगा, project चुनवाएगा, एक Web App ढूंढेगा/बनाएगा, और `firebase-config.js` अपने-आप भर देगा।
+4. अंत में पूछेगा कि क्या `firestore.rules` अभी publish करनी है — चाहें तो `y` दबाएँ।
+5. ध्यान रहे: Firestore Database Console में पहले से enabled होनी चाहिए (Firebase Console → Firestore Database → Create database)।
+
+## Firebase setup (manual तरीका)
+1. Firebase Console में नया project बनाइए।
+2. Project settings → Your apps → Web app से Firebase config copy कीजिए।
+3. `firebase-config.js` में `YOUR_*` values replace कीजिए।
+4. Firestore Database enable कीजिए।
+5. `firestore.rules` की rules Firebase console में publish कीजिए।
+6. Files को HTTP(S) hosting पर रखिए (GitHub Pages, Firebase Hosting, Netlify आदि)। `file://` से ES modules/Firebase अक्सर सही नहीं चलते।
 
 ## Collections
 हर set अपनी Firestore collection में submissions रखता है:
