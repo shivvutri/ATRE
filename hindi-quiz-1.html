@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>हिंदी क्विज़ — सेट 1</title>
+<meta name="description" content="UP Assistant Teacher recruitment exam oriented Hindi practice quiz — 20 MCQs">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="shell">
+<header class="hero">
+  <div class="pill">UP Assistant Teacher • Hindi Practice</div>
+  <h1>हिंदी क्विज़ — सेट 1</h1>
+  <p>आधिकारिक विषय-वस्तु के अनुरूप: व्याकरण + अपठित गद्यांश + अपठित पद्यांश | 20 प्रश्न</p>
+  <div class="topbar"><span class="pill">20 प्रश्न</span><span class="pill">सही +3</span><span class="pill">गलत −1</span><span class="pill">अनुत्तरित 0</span></div>
+</header>
+
+<section class="panel">
+  <div class="candidate-grid">
+    <div class="field"><label for="candidateName">अभ्यर्थी का नाम *</label><input id="candidateName" maxlength="80" placeholder="अपना नाम लिखें" autocomplete="name"></div>
+    <div class="field"><label for="rollNo">रोल / रजिस्ट्रेशन नंबर</label><input id="rollNo" maxlength="40" placeholder="वैकल्पिक"></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-head"><span>Attempt progress</span><span id="progressText">0 / 20</span></div><div class="progress"><span id="progressBar"></span></div></div>
+</section>
+
+<main class="panel">
+  <div id="quizForm"></div>
+  <div class="actions"><button id="submitBtn" class="btn btn-primary" type="button">Submit Quiz</button><button id="resetBtn" class="btn btn-secondary" type="button">Reset</button></div>
+  <div id="status" class="status hidden"></div>
+</main>
+
+<section id="resultPanel" class="panel hidden">
+  <div class="result">
+    <div class="score-card"><div class="pill">Submission Result</div><div id="scoreBig" class="score-big">0 / 60</div><div><b id="correctCount">0</b> सही &nbsp; <b id="wrongCount">0</b> गलत &nbsp; <b id="unansweredCount">0</b> अनुत्तरित</div><p id="resultText" style="color:#e9e8ff;margin-bottom:0"></p></div>
+    <div class="leaderboard"><h3>🏆 Leaderboard — सेट 1</h3><div id="leaderboard" class="lb-list"><div class="loading">Leaderboard loading…</div></div><div class="note">यह leaderboard Firebase Cloud Firestore से पढ़ा जाता है।</div></div>
+  </div>
+  <div class="actions"><button id="pdfBtn" class="btn btn-primary" type="button">Submission PDF / Print</button><button id="reviewBtn" class="btn btn-secondary" type="button">उत्तर समीक्षा</button><a class="btn btn-secondary" href="./index.html">Quiz Home</a></div>
+  <div id="review" class="review hidden"></div>
+</section>
+
+<section class="panel"><div class="footer-note"><b>सिलेबस आधार:</b> आधिकारिक भर्ती परीक्षा PDF में भाषा के अंतर्गत हिंदी/संस्कृत/अंग्रेज़ी तथा “व्याकरण एवं अपठित गद्यांश, पद्यांश, Grammar, Comprehension” दिया गया है। यह 20-प्रश्न हिंदी सेट practice purpose के लिए है; इसे आधिकारिक प्रश्नपत्र न समझें।</div></section>
+</div>
+
+<script type="module">
+import { saveSubmission, fetchLeaderboard, makeSubmissionPdf, isFirebaseConfigured, LETTERS, escapeHtml, formatDate } from './quiz-common.js';
+
+const QUIZ_ID = "hindi-quiz-1";
+const QUIZ_TITLE = "हिंदी क्विज़ — सेट 1";
+const COLLECTION = "hindi_quiz_set_1";
+const QUESTIONS = [{"section":"व्याकरण","question":"निम्नलिखित में से कौन-सा शब्द तत्सम है?","options":["आँख","अग्नि","दूध","साँप"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“लड़कियाँ” शब्द में कौन-सा वचन है?","options":["एकवचन","बहुवचन","द्विवचन","अनिश्चित वचन"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“राम ने आम खाया।” वाक्य में “आम” कौन-सा कारक है?","options":["कर्ता","कर्म","करण","संप्रदान"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“असफल” शब्द में कौन-सा उपसर्ग है?","options":["सु","अ","अनु","प्रति"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“मानवता” शब्द में कौन-सा प्रत्यय है?","options":["पन","ता","ई","आना"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“राजपुत्र” में कौन-सा समास है?","options":["द्वंद्व","तत्पुरुष","बहुव्रीहि","अव्ययीभाव"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“महेश” शब्द में कौन-सी संधि है?","options":["गुण संधि","वृद्धि संधि","यण संधि","व्यंजन संधि"],"answer":0,"passage":null},{"section":"व्याकरण","question":"“देव + आलय” का सही संधि-रूप क्या है?","options":["देवआलय","देवालय","देवाआलय","देवलय"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“वह अगले वर्ष आएगा।” वाक्य में कौन-सा काल है?","options":["वर्तमान काल","भूतकाल","भविष्यत् काल","अपूर्ण भूतकाल"],"answer":2,"passage":null},{"section":"व्याकरण","question":"“सीता ने कविता लिखी।” वाक्य किस वाच्य में है?","options":["कर्तृवाच्य","कर्मवाच्य","भाववाच्य","मिश्रवाच्य"],"answer":0,"passage":null},{"section":"अपठित गद्यांश","question":"गद्यांश के अनुसार पुस्तकालय का प्रमुख लाभ क्या है?","options":["केवल मनोरंजन","आत्म-अध्ययन और ज्ञान-विस्तार","केवल परीक्षा में अंक बढ़ाना","केवल समाचार पढ़ना"],"answer":1,"passage":"पुस्तकालय केवल पुस्तकों को रखने का स्थान नहीं है। यह ऐसा केंद्र है जहाँ विद्यार्थी अपने पाठ्यक्रम से आगे जाकर विभिन्न विषयों के बारे में पढ़ सकते हैं। नियमित पठन से शब्द-भंडार बढ़ता है, विचार स्पष्ट होते हैं और आत्म-अध्ययन की आदत विकसित होती है। एक अच्छा पुस्तकालय विद्यार्थियों को शांत वातावरण के साथ-साथ अनेक दृष्टिकोणों से परिचित कराता है।"},{"section":"अपठित गद्यांश","question":"“विचार स्पष्ट होते हैं” का आशय क्या है?","options":["सोचने-समझने की क्षमता बेहतर होती है","व्यक्ति जल्दी लिखता है","केवल याद करने की क्षमता बढ़ती है","केवल बोलने की क्षमता बढ़ती है"],"answer":0,"passage":"पुस्तकालय केवल पुस्तकों को रखने का स्थान नहीं है। यह ऐसा केंद्र है जहाँ विद्यार्थी अपने पाठ्यक्रम से आगे जाकर विभिन्न विषयों के बारे में पढ़ सकते हैं। नियमित पठन से शब्द-भंडार बढ़ता है, विचार स्पष्ट होते हैं और आत्म-अध्ययन की आदत विकसित होती है। एक अच्छा पुस्तकालय विद्यार्थियों को शांत वातावरण के साथ-साथ अनेक दृष्टिकोणों से परिचित कराता है।"},{"section":"अपठित गद्यांश","question":"गद्यांश के लिए सबसे उपयुक्त शीर्षक कौन-सा है?","options":["परीक्षा का भय","पुस्तकालय का महत्व","समय की कमी","समाचार-पत्र"],"answer":1,"passage":"पुस्तकालय केवल पुस्तकों को रखने का स्थान नहीं है। यह ऐसा केंद्र है जहाँ विद्यार्थी अपने पाठ्यक्रम से आगे जाकर विभिन्न विषयों के बारे में पढ़ सकते हैं। नियमित पठन से शब्द-भंडार बढ़ता है, विचार स्पष्ट होते हैं और आत्म-अध्ययन की आदत विकसित होती है। एक अच्छा पुस्तकालय विद्यार्थियों को शांत वातावरण के साथ-साथ अनेक दृष्टिकोणों से परिचित कराता है।"},{"section":"अपठित गद्यांश","question":"गद्यांश के अनुसार नियमित पठन से कौन-सा लाभ होता है?","options":["शब्द-भंडार बढ़ता है","नींद बढ़ती है","काम कम होता है","खेल की आदत बढ़ती है"],"answer":0,"passage":"पुस्तकालय केवल पुस्तकों को रखने का स्थान नहीं है। यह ऐसा केंद्र है जहाँ विद्यार्थी अपने पाठ्यक्रम से आगे जाकर विभिन्न विषयों के बारे में पढ़ सकते हैं। नियमित पठन से शब्द-भंडार बढ़ता है, विचार स्पष्ट होते हैं और आत्म-अध्ययन की आदत विकसित होती है। एक अच्छा पुस्तकालय विद्यार्थियों को शांत वातावरण के साथ-साथ अनेक दृष्टिकोणों से परिचित कराता है।"},{"section":"अपठित गद्यांश","question":"पुस्तकालय विद्यार्थियों को किनसे परिचित कराता है?","options":["केवल एक विचार से","अनेक दृष्टिकोणों से","केवल समाचारों से","केवल कहानियों से"],"answer":1,"passage":"पुस्तकालय केवल पुस्तकों को रखने का स्थान नहीं है। यह ऐसा केंद्र है जहाँ विद्यार्थी अपने पाठ्यक्रम से आगे जाकर विभिन्न विषयों के बारे में पढ़ सकते हैं। नियमित पठन से शब्द-भंडार बढ़ता है, विचार स्पष्ट होते हैं और आत्म-अध्ययन की आदत विकसित होती है। एक अच्छा पुस्तकालय विद्यार्थियों को शांत वातावरण के साथ-साथ अनेक दृष्टिकोणों से परिचित कराता है।"},{"section":"अपठित पद्यांश","question":"पद्यांश में किस समय का चित्रण है?","options":["रात","संध्या","प्रातःकाल","दोपहर"],"answer":2,"passage":"सुबह की किरणें आईं, आँगन हँसने लगा।\nओस की बूँदों ने जैसे, धरती को मोती जड़ा।\nपेड़ खड़े मुस्काते हैं, पंछी गीत सुनाते हैं।\nनव प्रभात के संग मिलकर, मन में आशा जगाते हैं।"},{"section":"अपठित पद्यांश","question":"ओस की बूँदों की तुलना किससे की गई है?","options":["फूलों से","मोती से","तारों से","पत्तियों से"],"answer":1,"passage":"सुबह की किरणें आईं, आँगन हँसने लगा।\nओस की बूँदों ने जैसे, धरती को मोती जड़ा।\nपेड़ खड़े मुस्काते हैं, पंछी गीत सुनाते हैं।\nनव प्रभात के संग मिलकर, मन में आशा जगाते हैं।"},{"section":"अपठित पद्यांश","question":"पद्यांश का मुख्य भाव क्या है?","options":["भय","नवप्रभात और आशा","क्रोध","वियोग"],"answer":1,"passage":"सुबह की किरणें आईं, आँगन हँसने लगा।\nओस की बूँदों ने जैसे, धरती को मोती जड़ा।\nपेड़ खड़े मुस्काते हैं, पंछी गीत सुनाते हैं।\nनव प्रभात के संग मिलकर, मन में आशा जगाते हैं।"},{"section":"अपठित पद्यांश","question":"“आँगन हँसने लगा” में किस भाव का मानवीकरण हुआ है?","options":["आँगन को मानव की तरह हँसता बताया गया है","आँगन को पेड़ बताया गया है","आँगन को पक्षी बताया गया है","आँगन को बादल बताया गया है"],"answer":0,"passage":"सुबह की किरणें आईं, आँगन हँसने लगा।\nओस की बूँदों ने जैसे, धरती को मोती जड़ा।\nपेड़ खड़े मुस्काते हैं, पंछी गीत सुनाते हैं।\nनव प्रभात के संग मिलकर, मन में आशा जगाते हैं।"},{"section":"अपठित पद्यांश","question":"इस पद्यांश के लिए सबसे उपयुक्त शीर्षक क्या होगा?","options":["नव प्रभात","शीत ऋतु","अंधेरी रात","यात्रा"],"answer":0,"passage":"सुबह की किरणें आईं, आँगन हँसने लगा।\nओस की बूँदों ने जैसे, धरती को मोती जड़ा।\nपेड़ खड़े मुस्काते हैं, पंछी गीत सुनाते हैं।\nनव प्रभात के संग मिलकर, मन में आशा जगाते हैं।"}];
+const MAX_SCORE = 60;
+
+const form = document.getElementById('quizForm');
+const progressText = document.getElementById('progressText');
+const progressBar = document.getElementById('progressBar');
+const status = document.getElementById('status');
+const resultPanel = document.getElementById('resultPanel');
+const leaderboard = document.getElementById('leaderboard');
+const review = document.getElementById('review');
+let submitted = false;
+let lastAnswers = [];
+let lastScore = 0;
+let lastCounts = {correct:0,wrong:0,unanswered:0};
+
+let previousSection = '';
+let previousPassage = null;
+QUESTIONS.forEach((q,i)=>{
+  if(q.section !== previousSection){
+    const h=document.createElement('div'); h.className='section-title';
+    h.textContent=q.section; h.style.cssText='font-size:18px;font-weight:900;color:#4636c9;margin:18px 2px 10px;';
+    form.appendChild(h); previousSection=q.section;
+  }
+  if(q.passage && q.passage !== previousPassage){
+    const p=document.createElement('div'); p.className='passage';
+    p.innerHTML = `<b>अपठित ${q.section.includes('पद्य')?'पद्यांश':'गद्यांश'}:</b><br>${escapeHtml(q.passage).replaceAll('\n','<br>')}`;
+    form.appendChild(p); previousPassage=q.passage;
+  }
+  const wrap=document.createElement('section'); wrap.className='question';
+  wrap.innerHTML = `<div class="q-top"><div class="q-no">${i+1}</div><div class="q-text">${escapeHtml(q.question)}</div></div><div class="options">${q.options.map((opt,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}"> <span><b>${LETTERS[j]}.</b> ${escapeHtml(opt)}</span></label>`).join('')}</div>`;
+  form.appendChild(wrap);
+});
+
+function updateProgress(){
+  const answered=[...form.querySelectorAll('input[type=radio]:checked')].length;
+  progressText.textContent=`${answered} / ${QUESTIONS.length}`;
+  progressBar.style.width=`${(answered/QUESTIONS.length)*100}%`;
+}
+form.addEventListener('change',updateProgress);
+
+document.getElementById('resetBtn').addEventListener('click',()=>location.reload());
+
+function setStatus(message, kind='warn'){status.className=`status ${kind}`;status.textContent=message;status.classList.remove('hidden');}
+
+async function loadLeaderboard(){
+  if(!isFirebaseConfigured()){
+    leaderboard.innerHTML='<div class="loading">Firebase config अभी सेट नहीं है। <code>firebase-config.js</code> में अपना Web App config भरें।</div>';
+    return;
+  }
+  leaderboard.innerHTML='<div class="loading">Leaderboard loading…</div>';
+  try{
+    const rows=await fetchLeaderboard(COLLECTION,20);
+    if(!rows.length){ leaderboard.innerHTML='<div class="loading">अभी कोई submission नहीं है।</div>'; return; }
+    leaderboard.innerHTML=rows.map(r=>`<div class="lb-row"><div class="lb-rank">#${r.rank}</div><div><div class="lb-name">${escapeHtml(r.candidateName||'Anonymous')}</div><div class="lb-meta">${escapeHtml(r.rollNo||'')} · ${formatDate(r.submittedAt)}</div></div><div class="lb-score">${Number(r.score)||0}/${Number(r.maxScore)||60}</div></div>`).join('');
+  }catch(err){
+    console.error(err); leaderboard.innerHTML='<div class="loading">Leaderboard load नहीं हो पाया। Firebase rules/index/config जाँचें।</div>';
+  }
+}
+
+document.getElementById('submitBtn').addEventListener('click', async()=>{
+  if(submitted) return;
+  const candidateName=document.getElementById('candidateName').value.trim();
+  const rollNo=document.getElementById('rollNo').value.trim();
+  if(!candidateName){alert('कृपया अपना नाम भरें।');return;}
+  const answers=QUESTIONS.map((_,i)=>{const el=document.querySelector(`input[name=q${i}]:checked`);return el?Number(el.value):-1;});
+  const correct=answers.reduce((n,a,i)=>n+(a===QUESTIONS[i].answer?1:0),0);
+  const wrong=answers.reduce((n,a,i)=>n+(a>=0 && a!==QUESTIONS[i].answer?1:0),0);
+  const unanswered=answers.filter(a=>a<0).length;
+  const score=correct*3 - wrong;
+
+  if(unanswered>0){
+    const ok=confirm(`आपने ${unanswered} प्रश्न unanswered छोड़े हैं। Score: ${score}/${MAX_SCORE}. क्या submit करना है?`);
+    if(!ok)return;
+  }
+  submitted=true;
+  document.getElementById('submitBtn').disabled=true;
+  lastAnswers=answers; lastScore=score; lastCounts={correct,wrong,unanswered};
+  resultPanel.classList.remove('hidden');
+  document.getElementById('scoreBig').textContent=`${score} / ${MAX_SCORE}`;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('wrongCount').textContent=wrong;
+  document.getElementById('unansweredCount').textContent=unanswered;
+  document.getElementById('resultText').textContent=score>=45?'बहुत अच्छा प्रदर्शन।':score>=30?'अच्छा प्रयास। कमजोर विषयों की पुनरावृत्ति करें।':'व्याकरण और comprehension के मूल concepts दोहराएँ।';
+  setStatus('Submission तैयार हो रहा है…','warn');
+  try{
+    const saved=await saveSubmission({collectionName:COLLECTION,quizId:QUIZ_ID,quizTitle:QUIZ_TITLE,candidateName,rollNo,score,maxScore:MAX_SCORE,correct,wrong,unanswered,answers});
+    if(saved.saved) setStatus('Submission Firebase में सफलतापूर्वक save हो गया। Leaderboard नीचे देखें।','good');
+    else setStatus(saved.message+' PDF फिर भी बनाया जा सकता है।','warn');
+  }catch(err){
+    console.error(err); setStatus('Firebase submission नहीं हो सका। PDF report फिर भी बनाई जा सकती है।','bad');
+  }
+  await loadLeaderboard();
+  resultPanel.scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+document.getElementById('pdfBtn').addEventListener('click',()=>{
+  const candidateName=document.getElementById('candidateName').value.trim()||'अज्ञात';
+  const rollNo=document.getElementById('rollNo').value.trim();
+  makeSubmissionPdf({quizTitle:QUIZ_TITLE,candidateName,rollNo,score:lastScore,maxScore:MAX_SCORE,correct:lastCounts.correct,wrong:lastCounts.wrong,unanswered:lastCounts.unanswered,questions:QUESTIONS,answers:lastAnswers});
+});
+
+document.getElementById('reviewBtn').addEventListener('click',()=>{
+  if(!submitted) return;
+  review.classList.toggle('hidden');
+  review.innerHTML=QUESTIONS.map((q,i)=>{
+    const a=lastAnswers[i]; const ok=a===q.answer;
+    return `<div class="review-row"><b>प्रश्न ${i+1}.</b> ${escapeHtml(q.question)}<div class="${ok?'correct':'wrong'}">आपका उत्तर: ${a>=0?LETTERS[a]+'. '+escapeHtml(q.options[a]):'अनुत्तरित'}</div><div>सही उत्तर: ${LETTERS[q.answer]+'. '+escapeHtml(q.options[q.answer])}</div></div>`;
+  }).join('');
+});
+
+loadLeaderboard();
+</script>
+</body>
+</html>

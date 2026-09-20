@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>हिंदी क्विज़ — सेट 3</title>
+<meta name="description" content="UP Assistant Teacher recruitment exam oriented Hindi practice quiz — 20 MCQs">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div class="shell">
+<header class="hero">
+  <div class="pill">UP Assistant Teacher • Hindi Practice</div>
+  <h1>हिंदी क्विज़ — सेट 3</h1>
+  <p>आधिकारिक विषय-वस्तु के अनुरूप: व्याकरण + अपठित गद्यांश + अपठित पद्यांश | 20 प्रश्न</p>
+  <div class="topbar"><span class="pill">20 प्रश्न</span><span class="pill">सही +3</span><span class="pill">गलत −1</span><span class="pill">अनुत्तरित 0</span></div>
+</header>
+
+<section class="panel">
+  <div class="candidate-grid">
+    <div class="field"><label for="candidateName">अभ्यर्थी का नाम *</label><input id="candidateName" maxlength="80" placeholder="अपना नाम लिखें" autocomplete="name"></div>
+    <div class="field"><label for="rollNo">रोल / रजिस्ट्रेशन नंबर</label><input id="rollNo" maxlength="40" placeholder="वैकल्पिक"></div>
+  </div>
+  <div class="progress-wrap"><div class="progress-head"><span>Attempt progress</span><span id="progressText">0 / 20</span></div><div class="progress"><span id="progressBar"></span></div></div>
+</section>
+
+<main class="panel">
+  <div id="quizForm"></div>
+  <div class="actions"><button id="submitBtn" class="btn btn-primary" type="button">Submit Quiz</button><button id="resetBtn" class="btn btn-secondary" type="button">Reset</button></div>
+  <div id="status" class="status hidden"></div>
+</main>
+
+<section id="resultPanel" class="panel hidden">
+  <div class="result">
+    <div class="score-card"><div class="pill">Submission Result</div><div id="scoreBig" class="score-big">0 / 60</div><div><b id="correctCount">0</b> सही &nbsp; <b id="wrongCount">0</b> गलत &nbsp; <b id="unansweredCount">0</b> अनुत्तरित</div><p id="resultText" style="color:#e9e8ff;margin-bottom:0"></p></div>
+    <div class="leaderboard"><h3>🏆 Leaderboard — सेट 3</h3><div id="leaderboard" class="lb-list"><div class="loading">Leaderboard loading…</div></div><div class="note">यह leaderboard Firebase Cloud Firestore से पढ़ा जाता है।</div></div>
+  </div>
+  <div class="actions"><button id="pdfBtn" class="btn btn-primary" type="button">Submission PDF / Print</button><button id="reviewBtn" class="btn btn-secondary" type="button">उत्तर समीक्षा</button><a class="btn btn-secondary" href="./index.html">Quiz Home</a></div>
+  <div id="review" class="review hidden"></div>
+</section>
+
+<section class="panel"><div class="footer-note"><b>सिलेबस आधार:</b> आधिकारिक भर्ती परीक्षा PDF में भाषा के अंतर्गत हिंदी/संस्कृत/अंग्रेज़ी तथा “व्याकरण एवं अपठित गद्यांश, पद्यांश, Grammar, Comprehension” दिया गया है। यह 20-प्रश्न हिंदी सेट practice purpose के लिए है; इसे आधिकारिक प्रश्नपत्र न समझें।</div></section>
+</div>
+
+<script type="module">
+import { saveSubmission, fetchLeaderboard, makeSubmissionPdf, isFirebaseConfigured, LETTERS, escapeHtml, formatDate } from './quiz-common.js';
+
+const QUIZ_ID = "hindi-quiz-3";
+const QUIZ_TITLE = "हिंदी क्विज़ — सेट 3";
+const COLLECTION = "hindi_quiz_set_3";
+const QUESTIONS = [{"section":"व्याकरण","question":"“सुंदरता” कौन-सी संज्ञा है?","options":["जातिवाचक","व्यक्तिवाचक","भाववाचक","द्रव्यवाचक"],"answer":2,"passage":null},{"section":"व्याकरण","question":"“लाल फूल” में “लाल” कौन-सा शब्द-भेद है?","options":["सर्वनाम","विशेषण","क्रिया","अव्यय"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“वह धीरे-धीरे चलता है।” में “धीरे-धीरे” कौन-सा क्रियाविशेषण है?","options":["कालवाचक","रीतिवाचक","स्थानवाचक","परिमाणवाचक"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“मैंने उसे पुस्तक दी।” में “उसे” कौन-सा कारक है?","options":["कर्म","संप्रदान","करण","अपादान"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“पेड़ से पत्ते गिरते हैं।” में “पेड़ से” कौन-सा कारक है?","options":["अपादान","अधिकरण","संबंध","कर्ता"],"answer":0,"passage":null},{"section":"व्याकरण","question":"“विद्यालय में छात्र हैं।” में “विद्यालय में” कौन-सा कारक है?","options":["संप्रदान","अधिकरण","कर्म","करण"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“नीलकमल” में कौन-सा समास है?","options":["द्वंद्व","कर्मधारय","बहुव्रीहि","अव्ययीभाव"],"answer":1,"passage":null},{"section":"व्याकरण","question":"“दिन-रात” में कौन-सा समास है?","options":["द्वंद्व","तत्पुरुष","कर्मधारय","द्विगु"],"answer":0,"passage":null},{"section":"व्याकरण","question":"“प्रतिदिन” में कौन-सा समास माना जाता है?","options":["बहुव्रीहि","द्वंद्व","अव्ययीभाव","तत्पुरुष"],"answer":2,"passage":null},{"section":"व्याकरण","question":"“अनुशासन” शब्द में कौन-सा उपसर्ग है?","options":["अनु","सु","परि","अधि"],"answer":0,"passage":null},{"section":"अपठित गद्यांश","question":"गद्यांश के अनुसार समय-सारिणी का मुख्य उद्देश्य क्या है?","options":["कठोर बंधन बनाना","कार्य और समय में संतुलन बनाना","केवल पढ़ाई कराना","विश्राम रोकना"],"answer":1,"passage":"समय का सदुपयोग जीवन को व्यवस्थित बनाता है। जो विद्यार्थी अपने कार्यों की प्राथमिकता तय करते हैं, वे पढ़ाई, विश्राम और अन्य गतिविधियों के लिए उचित समय निकाल पाते हैं। समय-सारिणी का उद्देश्य कठोर बंधन बनाना नहीं, बल्कि दिन के विभिन्न कार्यों में संतुलन स्थापित करना है। नियमितता से काम करने पर तनाव कम होता है और आत्मविश्वास बढ़ता है।"},{"section":"अपठित गद्यांश","question":"कार्य की प्राथमिकता तय करने से क्या लाभ है?","options":["समय का उचित विभाजन हो पाता है","समय नष्ट होता है","काम बढ़ जाता है","नींद कम होती है"],"answer":0,"passage":"समय का सदुपयोग जीवन को व्यवस्थित बनाता है। जो विद्यार्थी अपने कार्यों की प्राथमिकता तय करते हैं, वे पढ़ाई, विश्राम और अन्य गतिविधियों के लिए उचित समय निकाल पाते हैं। समय-सारिणी का उद्देश्य कठोर बंधन बनाना नहीं, बल्कि दिन के विभिन्न कार्यों में संतुलन स्थापित करना है। नियमितता से काम करने पर तनाव कम होता है और आत्मविश्वास बढ़ता है।"},{"section":"अपठित गद्यांश","question":"नियमितता का एक परिणाम क्या बताया गया है?","options":["तनाव बढ़ता है","आत्मविश्वास बढ़ता है","समय रुक जाता है","काम कम हो जाता है"],"answer":1,"passage":"समय का सदुपयोग जीवन को व्यवस्थित बनाता है। जो विद्यार्थी अपने कार्यों की प्राथमिकता तय करते हैं, वे पढ़ाई, विश्राम और अन्य गतिविधियों के लिए उचित समय निकाल पाते हैं। समय-सारिणी का उद्देश्य कठोर बंधन बनाना नहीं, बल्कि दिन के विभिन्न कार्यों में संतुलन स्थापित करना है। नियमितता से काम करने पर तनाव कम होता है और आत्मविश्वास बढ़ता है।"},{"section":"अपठित गद्यांश","question":"गद्यांश के लिए उपयुक्त शीर्षक क्या है?","options":["समय का सदुपयोग","मनोरंजन के साधन","विद्यालय की छुट्टी","खेल प्रतियोगिता"],"answer":0,"passage":"समय का सदुपयोग जीवन को व्यवस्थित बनाता है। जो विद्यार्थी अपने कार्यों की प्राथमिकता तय करते हैं, वे पढ़ाई, विश्राम और अन्य गतिविधियों के लिए उचित समय निकाल पाते हैं। समय-सारिणी का उद्देश्य कठोर बंधन बनाना नहीं, बल्कि दिन के विभिन्न कार्यों में संतुलन स्थापित करना है। नियमितता से काम करने पर तनाव कम होता है और आत्मविश्वास बढ़ता है।"},{"section":"अपठित गद्यांश","question":"गद्यांश के अनुसार समय-सारिणी किसका विकल्प नहीं है?","options":["संतुलन का","कठोर बंधन का","नियमितता का","प्राथमिकता का"],"answer":1,"passage":"समय का सदुपयोग जीवन को व्यवस्थित बनाता है। जो विद्यार्थी अपने कार्यों की प्राथमिकता तय करते हैं, वे पढ़ाई, विश्राम और अन्य गतिविधियों के लिए उचित समय निकाल पाते हैं। समय-सारिणी का उद्देश्य कठोर बंधन बनाना नहीं, बल्कि दिन के विभिन्न कार्यों में संतुलन स्थापित करना है। नियमितता से काम करने पर तनाव कम होता है और आत्मविश्वास बढ़ता है।"},{"section":"अपठित पद्यांश","question":"पद्यांश में किसे न रोकने की बात कही गई है?","options":["कदम को","हवा को","बारिश को","समय को"],"answer":0,"passage":"मेहनत की राह कठिन सही, कदम कभी मत रोकना।\nछोटी-सी हर जीत सँजोना, हार से भी कुछ सीखना।\nआज का श्रम कल का फल है, यह बात सदा तुम जानो।\nहिम्मत, धैर्य और विश्वास से, अपने सपनों को पहचानो।"},{"section":"अपठित पद्यांश","question":"हार से क्या सीखने की बात कही गई है?","options":["कुछ भी नहीं","अनुभव और सुधार","केवल निराशा","दूसरों की गलती"],"answer":1,"passage":"मेहनत की राह कठिन सही, कदम कभी मत रोकना।\nछोटी-सी हर जीत सँजोना, हार से भी कुछ सीखना।\nआज का श्रम कल का फल है, यह बात सदा तुम जानो।\nहिम्मत, धैर्य और विश्वास से, अपने सपनों को पहचानो।"},{"section":"अपठित पद्यांश","question":"“आज का श्रम कल का फल है” का आशय क्या है?","options":["मेहनत का परिणाम भविष्य में मिलता है","श्रम व्यर्थ है","फल तुरंत मिलता है","आज काम नहीं करना चाहिए"],"answer":0,"passage":"मेहनत की राह कठिन सही, कदम कभी मत रोकना।\nछोटी-सी हर जीत सँजोना, हार से भी कुछ सीखना।\nआज का श्रम कल का फल है, यह बात सदा तुम जानो।\nहिम्मत, धैर्य और विश्वास से, अपने सपनों को पहचानो।"},{"section":"अपठित पद्यांश","question":"सफलता के लिए किन गुणों पर बल दिया गया है?","options":["क्रोध और भय","हिम्मत, धैर्य और विश्वास","आलस्य और आराम","केवल भाग्य"],"answer":1,"passage":"मेहनत की राह कठिन सही, कदम कभी मत रोकना।\nछोटी-सी हर जीत सँजोना, हार से भी कुछ सीखना।\nआज का श्रम कल का फल है, यह बात सदा तुम जानो।\nहिम्मत, धैर्य और विश्वास से, अपने सपनों को पहचानो।"},{"section":"अपठित पद्यांश","question":"पद्यांश का मुख्य संदेश क्या है?","options":["परिश्रम और दृढ़ता से आगे बढ़ना","हार मान लेना","केवल भाग्य पर निर्भर रहना","आराम को प्राथमिकता देना"],"answer":0,"passage":"मेहनत की राह कठिन सही, कदम कभी मत रोकना।\nछोटी-सी हर जीत सँजोना, हार से भी कुछ सीखना।\nआज का श्रम कल का फल है, यह बात सदा तुम जानो।\nहिम्मत, धैर्य और विश्वास से, अपने सपनों को पहचानो।"}];
+const MAX_SCORE = 60;
+
+const form = document.getElementById('quizForm');
+const progressText = document.getElementById('progressText');
+const progressBar = document.getElementById('progressBar');
+const status = document.getElementById('status');
+const resultPanel = document.getElementById('resultPanel');
+const leaderboard = document.getElementById('leaderboard');
+const review = document.getElementById('review');
+let submitted = false;
+let lastAnswers = [];
+let lastScore = 0;
+let lastCounts = {correct:0,wrong:0,unanswered:0};
+
+let previousSection = '';
+let previousPassage = null;
+QUESTIONS.forEach((q,i)=>{
+  if(q.section !== previousSection){
+    const h=document.createElement('div'); h.className='section-title';
+    h.textContent=q.section; h.style.cssText='font-size:18px;font-weight:900;color:#4636c9;margin:18px 2px 10px;';
+    form.appendChild(h); previousSection=q.section;
+  }
+  if(q.passage && q.passage !== previousPassage){
+    const p=document.createElement('div'); p.className='passage';
+    p.innerHTML = `<b>अपठित ${q.section.includes('पद्य')?'पद्यांश':'गद्यांश'}:</b><br>${escapeHtml(q.passage).replaceAll('\n','<br>')}`;
+    form.appendChild(p); previousPassage=q.passage;
+  }
+  const wrap=document.createElement('section'); wrap.className='question';
+  wrap.innerHTML = `<div class="q-top"><div class="q-no">${i+1}</div><div class="q-text">${escapeHtml(q.question)}</div></div><div class="options">${q.options.map((opt,j)=>`<label class="opt"><input type="radio" name="q${i}" value="${j}"> <span><b>${LETTERS[j]}.</b> ${escapeHtml(opt)}</span></label>`).join('')}</div>`;
+  form.appendChild(wrap);
+});
+
+function updateProgress(){
+  const answered=[...form.querySelectorAll('input[type=radio]:checked')].length;
+  progressText.textContent=`${answered} / ${QUESTIONS.length}`;
+  progressBar.style.width=`${(answered/QUESTIONS.length)*100}%`;
+}
+form.addEventListener('change',updateProgress);
+
+document.getElementById('resetBtn').addEventListener('click',()=>location.reload());
+
+function setStatus(message, kind='warn'){status.className=`status ${kind}`;status.textContent=message;status.classList.remove('hidden');}
+
+async function loadLeaderboard(){
+  if(!isFirebaseConfigured()){
+    leaderboard.innerHTML='<div class="loading">Firebase config अभी सेट नहीं है। <code>firebase-config.js</code> में अपना Web App config भरें।</div>';
+    return;
+  }
+  leaderboard.innerHTML='<div class="loading">Leaderboard loading…</div>';
+  try{
+    const rows=await fetchLeaderboard(COLLECTION,20);
+    if(!rows.length){ leaderboard.innerHTML='<div class="loading">अभी कोई submission नहीं है।</div>'; return; }
+    leaderboard.innerHTML=rows.map(r=>`<div class="lb-row"><div class="lb-rank">#${r.rank}</div><div><div class="lb-name">${escapeHtml(r.candidateName||'Anonymous')}</div><div class="lb-meta">${escapeHtml(r.rollNo||'')} · ${formatDate(r.submittedAt)}</div></div><div class="lb-score">${Number(r.score)||0}/${Number(r.maxScore)||60}</div></div>`).join('');
+  }catch(err){
+    console.error(err); leaderboard.innerHTML='<div class="loading">Leaderboard load नहीं हो पाया। Firebase rules/index/config जाँचें।</div>';
+  }
+}
+
+document.getElementById('submitBtn').addEventListener('click', async()=>{
+  if(submitted) return;
+  const candidateName=document.getElementById('candidateName').value.trim();
+  const rollNo=document.getElementById('rollNo').value.trim();
+  if(!candidateName){alert('कृपया अपना नाम भरें।');return;}
+  const answers=QUESTIONS.map((_,i)=>{const el=document.querySelector(`input[name=q${i}]:checked`);return el?Number(el.value):-1;});
+  const correct=answers.reduce((n,a,i)=>n+(a===QUESTIONS[i].answer?1:0),0);
+  const wrong=answers.reduce((n,a,i)=>n+(a>=0 && a!==QUESTIONS[i].answer?1:0),0);
+  const unanswered=answers.filter(a=>a<0).length;
+  const score=correct*3 - wrong;
+
+  if(unanswered>0){
+    const ok=confirm(`आपने ${unanswered} प्रश्न unanswered छोड़े हैं। Score: ${score}/${MAX_SCORE}. क्या submit करना है?`);
+    if(!ok)return;
+  }
+  submitted=true;
+  document.getElementById('submitBtn').disabled=true;
+  lastAnswers=answers; lastScore=score; lastCounts={correct,wrong,unanswered};
+  resultPanel.classList.remove('hidden');
+  document.getElementById('scoreBig').textContent=`${score} / ${MAX_SCORE}`;
+  document.getElementById('correctCount').textContent=correct;
+  document.getElementById('wrongCount').textContent=wrong;
+  document.getElementById('unansweredCount').textContent=unanswered;
+  document.getElementById('resultText').textContent=score>=45?'बहुत अच्छा प्रदर्शन।':score>=30?'अच्छा प्रयास। कमजोर विषयों की पुनरावृत्ति करें।':'व्याकरण और comprehension के मूल concepts दोहराएँ।';
+  setStatus('Submission तैयार हो रहा है…','warn');
+  try{
+    const saved=await saveSubmission({collectionName:COLLECTION,quizId:QUIZ_ID,quizTitle:QUIZ_TITLE,candidateName,rollNo,score,maxScore:MAX_SCORE,correct,wrong,unanswered,answers});
+    if(saved.saved) setStatus('Submission Firebase में सफलतापूर्वक save हो गया। Leaderboard नीचे देखें।','good');
+    else setStatus(saved.message+' PDF फिर भी बनाया जा सकता है।','warn');
+  }catch(err){
+    console.error(err); setStatus('Firebase submission नहीं हो सका। PDF report फिर भी बनाई जा सकती है।','bad');
+  }
+  await loadLeaderboard();
+  resultPanel.scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+document.getElementById('pdfBtn').addEventListener('click',()=>{
+  const candidateName=document.getElementById('candidateName').value.trim()||'अज्ञात';
+  const rollNo=document.getElementById('rollNo').value.trim();
+  makeSubmissionPdf({quizTitle:QUIZ_TITLE,candidateName,rollNo,score:lastScore,maxScore:MAX_SCORE,correct:lastCounts.correct,wrong:lastCounts.wrong,unanswered:lastCounts.unanswered,questions:QUESTIONS,answers:lastAnswers});
+});
+
+document.getElementById('reviewBtn').addEventListener('click',()=>{
+  if(!submitted) return;
+  review.classList.toggle('hidden');
+  review.innerHTML=QUESTIONS.map((q,i)=>{
+    const a=lastAnswers[i]; const ok=a===q.answer;
+    return `<div class="review-row"><b>प्रश्न ${i+1}.</b> ${escapeHtml(q.question)}<div class="${ok?'correct':'wrong'}">आपका उत्तर: ${a>=0?LETTERS[a]+'. '+escapeHtml(q.options[a]):'अनुत्तरित'}</div><div>सही उत्तर: ${LETTERS[q.answer]+'. '+escapeHtml(q.options[q.answer])}</div></div>`;
+  }).join('');
+});
+
+loadLeaderboard();
+</script>
+</body>
+</html>

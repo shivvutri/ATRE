@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /hindi_quiz_set_1/{docId} {
+      allow read: if true;
+      allow create: if validSubmission(request.resource.data, 'hindi-quiz-1');
+      allow update, delete: if false;
+    }
+    match /hindi_quiz_set_2/{docId} {
+      allow read: if true;
+      allow create: if validSubmission(request.resource.data, 'hindi-quiz-2');
+      allow update, delete: if false;
+    }
+    match /hindi_quiz_set_3/{docId} {
+      allow read: if true;
+      allow create: if validSubmission(request.resource.data, 'hindi-quiz-3');
+      allow update, delete: if false;
+    }
+    match /hindi_quiz_set_4/{docId} {
+      allow read: if true;
+      allow create: if validSubmission(request.resource.data, 'hindi-quiz-4');
+      allow update, delete: if false;
+    }
+    match /hindi_quiz_set_5/{docId} {
+      allow read: if true;
+      allow create: if validSubmission(request.resource.data, 'hindi-quiz-5');
+      allow update, delete: if false;
+    }
+
+    function validSubmission(d, expectedQuizId) {
+      return d.keys().hasOnly([
+        'quizId','quizTitle','candidateName','rollNo','score','maxScore',
+        'correct','wrong','unanswered','answers','submittedAt'
+      ])
+      && d.quizId == expectedQuizId
+      && d.quizTitle is string
+      && d.candidateName is string
+      && d.rollNo is string
+      && d.score is number
+      && d.maxScore == 60
+      && d.correct is number
+      && d.wrong is number
+      && d.unanswered is number
+      && d.answers is list
+      && d.candidateName.size() > 0
+      && d.candidateName.size() <= 80
+      && d.rollNo.size() <= 40
+      && d.score >= -20
+      && d.score <= 60
+      && d.correct >= 0 && d.correct <= 20
+      && d.wrong >= 0 && d.wrong <= 20
+      && d.unanswered >= 0 && d.unanswered <= 20
+      && d.correct + d.wrong + d.unanswered == 20
+      && d.answers.size() == 20;
+    }
+  }
+}
