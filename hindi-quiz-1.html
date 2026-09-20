@@ -4,6 +4,9 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>हिंदी क्विज़ — सेट 1</title>
 <meta name="description" content="UP Assistant Teacher recruitment exam oriented Hindi practice quiz — 20 MCQs">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
@@ -31,10 +34,10 @@
 
 <section id="resultPanel" class="panel hidden">
   <div class="result">
-    <div class="score-card"><div class="pill">Submission Result</div><div id="scoreBig" class="score-big">0 / 60</div><div><b id="correctCount">0</b> सही &nbsp; <b id="wrongCount">0</b> गलत &nbsp; <b id="unansweredCount">0</b> अनुत्तरित</div><p id="resultText" style="color:#e9e8ff;margin-bottom:0"></p></div>
+    <div class="score-card"><div class="pill">Submission Result</div><div id="scoreBig" class="score-big">0 / 60</div><div><b id="correctCount">0</b> सही &nbsp; <b id="wrongCount">0</b> गलत &nbsp; <b id="unansweredCount">0</b> अनुत्तरित</div><p id="resultText" style="color:#f0d9a8;margin-bottom:0"></p></div>
     <div class="leaderboard"><h3>🏆 Leaderboard — सेट 1</h3><div id="leaderboard" class="lb-list"><div class="loading">Leaderboard loading…</div></div><div class="note">यह leaderboard Firebase Cloud Firestore से पढ़ा जाता है।</div></div>
   </div>
-  <div class="actions"><button id="pdfBtn" class="btn btn-primary" type="button">Submission PDF / Print</button><button id="reviewBtn" class="btn btn-secondary" type="button">उत्तर समीक्षा</button><a class="btn btn-secondary" href="./index.html">Quiz Home</a></div>
+  <div class="actions"><button id="pdfBtn" class="btn btn-primary" type="button">Submission PDF / Print</button><button id="reviewBtn" class="btn btn-secondary" type="button">उत्तर समीक्षा</button><a class="btn btn-secondary" href="./index.html#mcq">Quiz Home</a></div>
   <div id="review" class="review hidden"></div>
 </section>
 
