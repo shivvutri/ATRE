@@ -11,8 +11,7 @@
 // live: true करते ही उसका "अभी शुरू करें" बटन दिखने लगेगा।
 //
 // ध्यान दें: इस फाइल में सिर्फ लिंक/नाम/स्टेटस है — असली प्रश्न इसमें नहीं
-// हैं। हर quiz के प्रश्न उसकी अपनी *-data.js फाइल में हैं
-// (जैसे hindi-quiz-1-data.js, mock-test-1-data.js)।
+// हैं। हर quiz के प्रश्न उसकी अपनी HTML फाइल में ही (क्विज़ के अंदर) मौजूद हैं।
 // =====================================================================
 
 const SUBJECT_QUIZZES = {
@@ -22,11 +21,14 @@ const SUBJECT_QUIZZES = {
     { url: "./hindi-quiz-3.html", label: "सेट 3" },
     { url: "./hindi-quiz-4.html", label: "सेट 4" },
     { url: "./hindi-quiz-5.html", label: "सेट 5" }
+  ],
+  maths: [
+    { url: "./maths-quiz-1.html", label: "सेट 1" },
+    { url: "./maths-quiz-2.html", label: "सेट 2" },
+    { url: "./maths-quiz-3.html", label: "सेट 3" },
+    { url: "./maths-quiz-4.html", label: "सेट 4" },
+    { url: "./maths-quiz-5.html", label: "सेट 5" }
   ]
-  // उदाहरण — Maths quiz शुरू करने पर बस यह जोड़ दें:
-  // maths: [
-  //   { url: "./maths-quiz-1.html", label: "सेट 1" }
-  // ]
 };
 
 const MOCK_TESTS = [
