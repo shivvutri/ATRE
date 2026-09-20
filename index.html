@@ -312,6 +312,20 @@
   .hero .hi-line{font-family:var(--sans); font-size:1.02rem; color:#c3cbdc; margin:8px 0 16px; max-width:50ch;}
   .hero p.lede{color:#aab4c9; font-size:1.02rem; max-width:56ch; margin-bottom:30px;}
 
+  .hero-cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:28px;}
+  .hero-cta{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    font-family:var(--sans); font-weight:600; font-size:.95rem;
+    padding:13px 22px; border-radius:10px; border:1.5px solid transparent;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .hero-cta:hover{transform:translateY(-1px);}
+  .hero-cta-primary{background:var(--gold); color:var(--navy-deep); box-shadow:0 6px 18px rgba(154,107,12,.35);}
+  .hero-cta-primary:hover{background:#b17c0e;}
+  .hero-cta-secondary{background:rgba(255,255,255,.06); color:#fff; border-color:rgba(255,255,255,.35);}
+  .hero-cta-secondary:hover{background:rgba(255,255,255,.14); border-color:#fff;}
+  @media (max-width:480px){ .hero-cta{flex:1 1 100%; justify-content:center;} }
+
   /* Hall-ticket style key-dates strip */
   .ticket-strip{
     position:relative; display:flex; flex-wrap:wrap; background:#fff; border-radius:var(--radius);
@@ -398,8 +412,9 @@
   /* ---------- Full length mock ---------- */
   .mock-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr)); gap:18px;}
   .mock-card{
-    position:relative; background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
-    padding:22px 20px 20px; overflow:hidden;
+    position:relative; background:var(--card); border:1px solid var(--line); border-top:4px solid var(--gold);
+    border-radius:var(--radius); padding:22px 20px 20px; overflow:hidden;
+    box-shadow:0 8px 22px rgba(22,35,63,.07);
   }
   .mock-card::before, .mock-card::after{
     content:""; position:absolute; width:16px; height:16px; background:var(--paper);
@@ -407,7 +422,7 @@
   }
   .mock-card::before{ left:-9px; }
   .mock-card::after{ right:-9px; }
-  .mock-card .mock-name{font-family:var(--serif); font-size:1.1rem; font-weight:600; color:var(--navy-deep); margin-bottom:4px;}
+  .mock-card .mock-name{font-family:var(--serif); font-size:1.25rem; font-weight:700; color:var(--navy-deep); margin-bottom:4px;}
   .mock-card .mock-meta{font-size:.8rem; color:var(--ink-soft); margin-bottom:16px; font-family:var(--mono);}
   .mock-status{
     display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:700;
@@ -460,9 +475,9 @@
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
     <nav class="primary-nav" id="primaryNav">
       <ul>
-        <li><a href="#news">Exam News</a></li>
         <li><a href="#mcq">MCQ Subject Wise</a></li>
         <li><a href="#mock">Full Length Mock</a></li>
+        <li><a href="#news">Exam News</a></li>
       </ul>
     </nav>
   </div>
@@ -477,6 +492,12 @@
     <h1>सहायक अध्यापक भर्ती 2026 — UP Assistant Teacher Recruitment</h1>
     <div class="hi-line">UPESSC · ताज़ा सूचनाएं, MCQ Practice &amp; Full Length Mock Test</div>
     <p class="lede">UP Sahayak Adhyapak Bharti 2026 की सम्पूर्ण जानकारी एक जगह — Latest Notification, Important Dates, Subject-wise MCQ Practice और Full-Length Mock Tests।</p>
+
+    <!-- Prominent quick-access CTAs — MCQ Practice और Mock Test ऊपर ही दिख जाएँ -->
+    <div class="hero-cta-row">
+      <a href="#mcq" class="hero-cta hero-cta-primary">📝 Subject-wise MCQ Practice करें</a>
+      <a href="#mock" class="hero-cta hero-cta-secondary">🎯 Full Length Mock Test दें</a>
+    </div>
 
     <!-- Hall-ticket style key dates strip -->
     <div class="ticket-strip">
@@ -503,7 +524,59 @@
 <main>
   <div class="wrap">
 
-    <!-- ===================== SECTION 1: Exam news ===================== -->
+    <!-- ===================== SECTION 1: MCQ Subject Wise ===================== -->
+    <section id="mcq">
+      <div class="section-head">
+        <span class="kicker">Practice</span>
+        <h2>सहायक अध्यापक MCQ Practice — Subject Wise</h2>
+        <p>UP Assistant Teacher Exam के लिए Subject-wise Chapter-by-Chapter MCQ Practice करें — Hindi, Maths, EVS, Pedagogy, Reasoning, GK और Computer।</p>
+      </div>
+
+      <div class="mcq-panel">
+        <div>
+          <h3>Practice by subject</h3>
+          <p>Questions will be added chapter by chapter for each subject below. Pick a subject to see what's available.</p>
+        </div>
+        <form class="mcq-form" id="mcqForm">
+          <label for="subjectSelect">Select subject</label>
+          <select class="subject-select" id="subjectSelect">
+            <option value="">— Select subject —</option>
+            <option value="hindi">Hindi</option>
+            <option value="english">English</option>
+            <option value="maths">Mathematics / गणित</option>
+            <option value="evs">Environmental Studies / पर्यावरण अध्ययन</option>
+            <option value="pedagogy">Child Development &amp; Pedagogy / बाल विकास</option>
+            <option value="reasoning">Reasoning</option>
+            <option value="gk">General Knowledge / सामान्य ज्ञान</option>
+            <option value="computer">Computer Knowledge</option>
+          </select>
+          <button type="submit" class="start-practice-btn">Start practice</button>
+          <div class="mcq-status" id="mcqStatus">Coming soon — questions for this subject haven't been added yet.</div>
+          <!-- यहाँ subject के sets की लिस्ट JS site-config.js से भरता है -->
+          <div id="subjectQuizLinks" class="hidden" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:10px;"></div>
+        </form>
+      </div>
+
+      <!-- Always-visible, crawlable links (search engines don't submit the form above).
+           यह पूरा ब्लॉक भी site-config.js से बनता है — सिर्फ वही subject यहाँ
+           दिखेंगे जिनके sets SUBJECT_QUIZZES में मौजूद हैं। -->
+      <div id="availableSetsWrap"></div>
+    </section>
+
+    <!-- ===================== SECTION 2: Full Length Mock ===================== -->
+    <section id="mock">
+      <div class="section-head">
+        <span class="kicker">Test series</span>
+        <h2>सहायक अध्यापक Full Length Mock Test 2026</h2>
+        <p>UP Assistant Teacher Exam Pattern पर आधारित Full Mock Test Series — सभी Subjects एक साथ, 120 Questions, 360 Marks, 2 घंटे।</p>
+      </div>
+
+      <!-- यह ग्रिड site-config.js की MOCK_TESTS लिस्ट से अपने आप बनता है।
+           नया mock test जोड़ना हो तो सिर्फ site-config.js में entry डालें। -->
+      <div class="mock-grid" id="mockGrid"></div>
+    </section>
+
+    <!-- ===================== SECTION 3: Exam news ===================== -->
     <section id="news">
       <div class="section-head">
         <span class="kicker">Notice board</span>
@@ -575,58 +648,6 @@
         </div>
 
       </div>
-    </section>
-
-    <!-- ===================== SECTION 2: MCQ Subject Wise ===================== -->
-    <section id="mcq">
-      <div class="section-head">
-        <span class="kicker">Practice</span>
-        <h2>सहायक अध्यापक MCQ Practice — Subject Wise</h2>
-        <p>UP Assistant Teacher Exam के लिए Subject-wise Chapter-by-Chapter MCQ Practice करें — Hindi, Maths, EVS, Pedagogy, Reasoning, GK और Computer।</p>
-      </div>
-
-      <div class="mcq-panel">
-        <div>
-          <h3>Practice by subject</h3>
-          <p>Questions will be added chapter by chapter for each subject below. Pick a subject to see what's available.</p>
-        </div>
-        <form class="mcq-form" id="mcqForm">
-          <label for="subjectSelect">Select subject</label>
-          <select class="subject-select" id="subjectSelect">
-            <option value="">— Select subject —</option>
-            <option value="hindi">Hindi</option>
-            <option value="english">English</option>
-            <option value="maths">Mathematics / गणित</option>
-            <option value="evs">Environmental Studies / पर्यावरण अध्ययन</option>
-            <option value="pedagogy">Child Development &amp; Pedagogy / बाल विकास</option>
-            <option value="reasoning">Reasoning</option>
-            <option value="gk">General Knowledge / सामान्य ज्ञान</option>
-            <option value="computer">Computer Knowledge</option>
-          </select>
-          <button type="submit" class="start-practice-btn">Start practice</button>
-          <div class="mcq-status" id="mcqStatus">Coming soon — questions for this subject haven't been added yet.</div>
-          <!-- यहाँ subject के sets की लिस्ट JS site-config.js से भरता है -->
-          <div id="subjectQuizLinks" class="hidden" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:10px;"></div>
-        </form>
-      </div>
-
-      <!-- Always-visible, crawlable links (search engines don't submit the form above).
-           यह पूरा ब्लॉक भी site-config.js से बनता है — सिर्फ वही subject यहाँ
-           दिखेंगे जिनके sets SUBJECT_QUIZZES में मौजूद हैं। -->
-      <div id="availableSetsWrap"></div>
-    </section>
-
-    <!-- ===================== SECTION 3: Full Length Mock ===================== -->
-    <section id="mock">
-      <div class="section-head">
-        <span class="kicker">Test series</span>
-        <h2>सहायक अध्यापक Full Length Mock Test 2026</h2>
-        <p>UP Assistant Teacher Exam Pattern पर आधारित Full Mock Test Series — सभी Subjects एक साथ, 120 Questions, 360 Marks, 2 घंटे।</p>
-      </div>
-
-      <!-- यह ग्रिड site-config.js की MOCK_TESTS लिस्ट से अपने आप बनता है।
-           नया mock test जोड़ना हो तो सिर्फ site-config.js में entry डालें। -->
-      <div class="mock-grid" id="mockGrid"></div>
     </section>
 
   </div>
@@ -735,7 +756,7 @@
         <div class="mock-name">Full Mock Test ${m.number}</div>
         <div class="mock-meta">All subjects · Full paper</div>
         ${m.live
-          ? `<a class="mock-status" href="${m.url}" style="text-decoration:none; color:var(--ok, #2f6b3d); font-weight:600;">▶ अभी शुरू करें</a>`
+          ? `<a class="mock-status" href="${m.url}" style="display:inline-block; text-decoration:none; color:#fff; background:var(--navy); font-weight:700; padding:9px 16px; border-radius:8px;">▶ अभी शुरू करें</a>`
           : `<span class="mock-status">🔒 Coming soon</span>`
         }
       </div>
