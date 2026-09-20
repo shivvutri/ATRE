@@ -419,6 +419,7 @@
   footer a{color:#c9d1e2; text-decoration:none;}
   footer a:hover{color:#fff;}
 </style>
+<script src="./site-config.js"></script>
 </head>
 <body>
 
@@ -604,28 +605,15 @@
           </select>
           <button type="submit" class="start-practice-btn">Start practice</button>
           <div class="mcq-status" id="mcqStatus">Coming soon — questions for this subject haven't been added yet.</div>
-          <div id="hindiQuizLinks" class="hidden" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:10px;">
-            <a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="./hindi-quiz-1.html">Set 1</a>
-            <a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="./hindi-quiz-2.html">Set 2</a>
-            <a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="./hindi-quiz-3.html">Set 3</a>
-            <a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="./hindi-quiz-4.html">Set 4</a>
-            <a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="./hindi-quiz-5.html">Set 5</a>
-          </div>
+          <!-- यहाँ subject के sets की लिस्ट JS site-config.js से भरता है -->
+          <div id="subjectQuizLinks" class="hidden" style="margin-top:6px; display:flex; flex-wrap:wrap; gap:10px;"></div>
         </form>
       </div>
 
-      <!-- Always-visible, crawlable links (search engines don't submit the form above) -->
-      <div class="hindi-set-list" aria-label="सहायक अध्यापक भर्ती हिंदी MCQ Practice Sets">
-        <h3>अभी उपलब्ध: सहायक अध्यापक भर्ती हिंदी MCQ Practice Sets</h3>
-        <p>UP Assistant Teacher / सहायक अध्यापक भर्ती परीक्षा पैटर्न पर आधारित हिंदी व्याकरण, अपठित गद्यांश और अपठित पद्यांश के 5 Free Practice Sets (हर सेट में 20 प्रश्न)।</p>
-        <ul class="hindi-set-links">
-          <li><a href="./hindi-quiz-1.html">सहायक अध्यापक भर्ती हिंदी MCQ — सेट 1 (20 प्रश्न)</a></li>
-          <li><a href="./hindi-quiz-2.html">सहायक अध्यापक भर्ती हिंदी MCQ — सेट 2 (20 प्रश्न)</a></li>
-          <li><a href="./hindi-quiz-3.html">सहायक अध्यापक भर्ती हिंदी MCQ — सेट 3 (20 प्रश्न)</a></li>
-          <li><a href="./hindi-quiz-4.html">सहायक अध्यापक भर्ती हिंदी MCQ — सेट 4 (20 प्रश्न)</a></li>
-          <li><a href="./hindi-quiz-5.html">सहायक अध्यापक भर्ती हिंदी MCQ — सेट 5 (20 प्रश्न)</a></li>
-        </ul>
-      </div>
+      <!-- Always-visible, crawlable links (search engines don't submit the form above).
+           यह पूरा ब्लॉक भी site-config.js से बनता है — सिर्फ वही subject यहाँ
+           दिखेंगे जिनके sets SUBJECT_QUIZZES में मौजूद हैं। -->
+      <div id="availableSetsWrap"></div>
     </section>
 
     <!-- ===================== SECTION 3: Full Length Mock ===================== -->
@@ -636,24 +624,9 @@
         <p>UP Assistant Teacher Exam Pattern पर आधारित Full Mock Test Series — सभी Subjects एक साथ, 120 Questions, 360 Marks, 2 घंटे।</p>
       </div>
 
-      <!-- SAMPLE CONTENT — copy a .mock-card to add more -->
-      <div class="mock-grid">
-        <div class="mock-card">
-          <div class="mock-name">Full Mock Test 1</div>
-          <div class="mock-meta">All subjects · Full paper</div>
-          <span class="mock-status">🔒 Coming soon</span>
-        </div>
-        <div class="mock-card">
-          <div class="mock-name">Full Mock Test 2</div>
-          <div class="mock-meta">All subjects · Full paper</div>
-          <span class="mock-status">🔒 Coming soon</span>
-        </div>
-        <div class="mock-card">
-          <div class="mock-name">Full Mock Test 3</div>
-          <div class="mock-meta">All subjects · Full paper</div>
-          <span class="mock-status">🔒 Coming soon</span>
-        </div>
-      </div>
+      <!-- यह ग्रिड site-config.js की MOCK_TESTS लिस्ट से अपने आप बनता है।
+           नया mock test जोड़ना हो तो सिर्फ site-config.js में entry डालें। -->
+      <div class="mock-grid" id="mockGrid"></div>
     </section>
 
   </div>
@@ -692,31 +665,82 @@
     });
   });
 
-  // MCQ subject form — shows a "coming soon" status instead of navigating
-  // anywhere, since no quiz data exists yet. Replace this handler once
-  // real subject-wise quiz pages/data are wired up.
+  // ===================================================================
+  // यह पूरा हिस्सा site-config.js (SUBJECT_QUIZZES, MOCK_TESTS) से डेटा
+  // पढ़कर पेज पर लिस्ट बनाता है। नई quiz/mock test जोड़नी हो तो
+  // site-config.js में entry डालें — यहाँ कुछ बदलने की ज़रूरत नहीं।
+  // ===================================================================
+  const subjectLabels = {}; // e.g. { hindi: "Hindi", maths: "Mathematics / गणित" }
+  document.querySelectorAll('#subjectSelect option').forEach(opt => {
+    if (opt.value) subjectLabels[opt.value] = opt.textContent.trim();
+  });
+
+  // 1) MCQ subject dropdown — "Start practice" दबाने पर
   const mcqForm = document.getElementById('mcqForm');
   const mcqStatus = document.getElementById('mcqStatus');
   const subjectSelect = document.getElementById('subjectSelect');
-  const hindiQuizLinks = document.getElementById('hindiQuizLinks');
+  const subjectQuizLinks = document.getElementById('subjectQuizLinks');
+
   mcqForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    if (!subjectSelect.value){
+    const subject = subjectSelect.value;
+    if (!subject){
       mcqStatus.textContent = 'Please select a subject first.';
       mcqStatus.classList.add('show');
-      hindiQuizLinks.classList.add('hidden');
+      subjectQuizLinks.classList.add('hidden');
+      subjectQuizLinks.innerHTML = '';
       return;
     }
-    if (subjectSelect.value === 'hindi'){
+    const sets = (typeof SUBJECT_QUIZZES !== 'undefined' && SUBJECT_QUIZZES[subject]) || [];
+    if (sets.length){
       mcqStatus.classList.remove('show');
-      hindiQuizLinks.classList.remove('hidden');
+      subjectQuizLinks.innerHTML = sets.map(s =>
+        `<a class="start-practice-btn" style="text-decoration:none; display:inline-block;" href="${s.url}">${s.label}</a>`
+      ).join('');
+      subjectQuizLinks.classList.remove('hidden');
       return;
     }
-    hindiQuizLinks.classList.add('hidden');
-    const label = subjectSelect.options[subjectSelect.selectedIndex].text;
+    subjectQuizLinks.classList.add('hidden');
+    subjectQuizLinks.innerHTML = '';
+    const label = subjectLabels[subject] || subject;
     mcqStatus.textContent = `Coming soon — questions for ${label} haven't been added yet.`;
     mcqStatus.classList.add('show');
   });
+
+  // 2) हमेशा-दिखने वाली, crawlable subject-wise sets लिस्ट (SEO के लिए)
+  const availableSetsWrap = document.getElementById('availableSetsWrap');
+  if (availableSetsWrap && typeof SUBJECT_QUIZZES !== 'undefined'){
+    let html = '';
+    Object.keys(SUBJECT_QUIZZES).forEach(subject => {
+      const sets = SUBJECT_QUIZZES[subject];
+      if (!sets || !sets.length) return;
+      const label = subjectLabels[subject] || subject;
+      html += `<div class="hindi-set-list" aria-label="सहायक अध्यापक भर्ती ${label} MCQ Practice Sets">`;
+      html += `<h3>अभी उपलब्ध: सहायक अध्यापक भर्ती ${label} MCQ Practice Sets</h3>`;
+      html += `<p>UP Assistant Teacher / सहायक अध्यापक भर्ती परीक्षा पैटर्न पर आधारित ${label} के ${sets.length} Free Practice Sets।</p>`;
+      html += `<ul class="hindi-set-links">`;
+      sets.forEach((s, i) => {
+        html += `<li><a href="${s.url}">सहायक अध्यापक भर्ती ${label} MCQ — ${s.label}</a></li>`;
+      });
+      html += `</ul></div>`;
+    });
+    availableSetsWrap.innerHTML = html;
+  }
+
+  // 3) Full Length Mock Test cards
+  const mockGrid = document.getElementById('mockGrid');
+  if (mockGrid && typeof MOCK_TESTS !== 'undefined'){
+    mockGrid.innerHTML = MOCK_TESTS.map(m => `
+      <div class="mock-card">
+        <div class="mock-name">Full Mock Test ${m.number}</div>
+        <div class="mock-meta">All subjects · Full paper</div>
+        ${m.live
+          ? `<a class="mock-status" href="${m.url}" style="text-decoration:none; color:var(--ok, #2f6b3d); font-weight:600;">▶ अभी शुरू करें</a>`
+          : `<span class="mock-status">🔒 Coming soon</span>`
+        }
+      </div>
+    `).join('');
+  }
 </script>
 
 </body>

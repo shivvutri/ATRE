@@ -26,6 +26,11 @@ service cloud.firestore {
       allow create: if validSubmission(request.resource.data, 'hindi-quiz-5');
       allow update, delete: if false;
     }
+    match /mock_test_1/{docId} {
+      allow read: if true;
+      allow create: if validMockSubmission(request.resource.data, 'mock-test-1');
+      allow update, delete: if false;
+    }
 
     function validSubmission(d, expectedQuizId) {
       return d.keys().hasOnly([
@@ -52,6 +57,33 @@ service cloud.firestore {
       && d.unanswered >= 0 && d.unanswered <= 20
       && d.correct + d.wrong + d.unanswered == 20
       && d.answers.size() == 20;
+    }
+
+    function validMockSubmission(d, expectedQuizId) {
+      return d.keys().hasOnly([
+        'quizId','quizTitle','candidateName','rollNo','score','maxScore',
+        'correct','wrong','unanswered','answers','submittedAt'
+      ])
+      && d.quizId == expectedQuizId
+      && d.quizTitle is string
+      && d.candidateName is string
+      && d.rollNo is string
+      && d.score is number
+      && d.maxScore == 360
+      && d.correct is number
+      && d.wrong is number
+      && d.unanswered is number
+      && d.answers is list
+      && d.candidateName.size() > 0
+      && d.candidateName.size() <= 80
+      && d.rollNo.size() <= 40
+      && d.score >= -120
+      && d.score <= 360
+      && d.correct >= 0 && d.correct <= 120
+      && d.wrong >= 0 && d.wrong <= 120
+      && d.unanswered >= 0 && d.unanswered <= 120
+      && d.correct + d.wrong + d.unanswered == 120
+      && d.answers.size() == 120;
     }
   }
 }
