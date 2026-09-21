@@ -36,6 +36,20 @@ const SUBJECT_QUIZZES = {
     { url: "./english-quiz-4.html", label: "सेट 4" },
     { url: "./english-quiz-5.html", label: "सेट 5" }
   ],
+  pedagogy: [
+    { url: "./cdp-quiz-1.html", label: "सेट 1" },
+    { url: "./cdp-quiz-2.html", label: "सेट 2" },
+    { url: "./cdp-quiz-3.html", label: "सेट 3" },
+    { url: "./cdp-quiz-4.html", label: "सेट 4" },
+    { url: "./cdp-quiz-5.html", label: "सेट 5" }
+  ],
+  evs: [
+    { url: "./env-quiz-1.html", label: "सेट 1" },
+    { url: "./env-quiz-2.html", label: "सेट 2" },
+    { url: "./env-quiz-3.html", label: "सेट 3" },
+    { url: "./env-quiz-4.html", label: "सेट 4" },
+    { url: "./env-quiz-5.html", label: "सेट 5" }
+  ],
 };
 
 const MOCK_TESTS = [
