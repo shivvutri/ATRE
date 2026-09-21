@@ -29,14 +29,13 @@ const SUBJECT_QUIZZES = {
     { url: "./maths-quiz-4.html", label: "सेट 4" },
     { url: "./maths-quiz-5.html", label: "सेट 5" }
   ],
-  English: [
+  english: [
     { url: "./english-quiz-1.html", label: "सेट 1" },
     { url: "./english-quiz-2.html", label: "सेट 2" },
     { url: "./english-quiz-3.html", label: "सेट 3" },
     { url: "./english-quiz-4.html", label: "सेट 4" },
     { url: "./english-quiz-5.html", label: "सेट 5" }
   ],
-  
 };
 
 const MOCK_TESTS = [
