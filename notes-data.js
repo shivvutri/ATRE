@@ -110,7 +110,6 @@ const NOTES_DATA = [
     { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" }
     { title: "English Grammar Notes", url: "notes-pdf/English Grammar — विस्तृत अध्ययन सामग्री.pdf", pages: 13, size: "184 KB", tag: "New" }
     ]
-    ]
   },
 
   // ─────────────────────────────────────────
