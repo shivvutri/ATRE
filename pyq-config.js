@@ -20,7 +20,7 @@ const PYQ_PAPERS = {
     // { year: "2021", label: "UPTET 2021 — Paper 1 (Class I–V)", url: "./pyq/uptet-2021-paper1.pdf" }
   ],
   supertet: [
-    // { year: "2023", label: "SuperTET 2023 — Question Paper", url: "./pyq/supertet-2023.pdf" },
-    // { year: "2019", label: "SuperTET 2019 — Question Paper", url: "./pyq/supertet-2019.pdf" }
+    { year: "2019", label: "SuperTET 69000 PYQ", url: "./pyq/69000-pyq.pdf" },
+    { year: "2018", label: "SuperTET 69000 PYQ", url: "./pyq/68500-pyq.pdf" }
   ]
 };
