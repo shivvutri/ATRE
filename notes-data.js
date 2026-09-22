@@ -88,7 +88,7 @@ const NOTES_DATA = [
       "Direction Sense, Letter Series"
     ],
     pdfs: [
-      // { title: "Reasoning Short Notes", url: "notes-pdf/reasoning.pdf", pages: 12, size: "1.8 MB", tag: "" }
+      { title: "Reasoning Short Notes", url: "notes-pdf/reasoning-notes-detailed.pdf", pages: 8, size: "294 KB", tag: "NEW" }
     ]
   },
 
