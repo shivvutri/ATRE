@@ -87,8 +87,12 @@ main{padding:36px 0 60px;}
 .ctopics li{font-size:.8rem;color:var(--soft);display:flex;align-items:flex-start;gap:6px;line-height:1.4;}
 .ctopics li::before{content:"›";color:var(--gold);font-weight:700;flex-shrink:0;}
 
-/* PDF LIST inside card */
-.pdf-list{border-top:1px solid var(--line);background:#fafbfc;}
+/* PDF LIST inside card — capped to ~3 rows, then scrolls so every card stays the same height */
+.pdf-list{border-top:1px solid var(--line);background:#fafbfc;max-height:210px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--line) transparent;}
+.pdf-list::-webkit-scrollbar{width:6px;}
+.pdf-list::-webkit-scrollbar-track{background:transparent;}
+.pdf-list::-webkit-scrollbar-thumb{background:var(--line);border-radius:20px;}
+.pdf-list::-webkit-scrollbar-thumb:hover{background:var(--gold);}
 .pdf-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);}
 .pdf-item:last-child{border-bottom:none;}
 .pdf-icon{font-size:1.3rem;flex-shrink:0;}
