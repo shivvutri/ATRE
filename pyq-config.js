@@ -21,6 +21,6 @@ const PYQ_PAPERS = {
   ],
   supertet: [
     { year: "2019", label: "SuperTET 69000 PYQ", url: "./pyq/69000-pyq.pdf" },
-    { year: "2018", label: "SuperTET 69000 PYQ", url: "./pyq/68500-pyq.pdf" }
+    { year: "2018", label: "SuperTET 68500 PYQ", url: "./pyq/68500-pyq.pdf" }
   ]
 };
