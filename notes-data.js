@@ -106,9 +106,9 @@ const NOTES_DATA = [
       "English Grammar & Comprehension",
       "संस्कृत — मूलभूत अवधारणाएं"
     ],
-    pdfs: [
-    { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" }
-    { title: "English Grammar Notes", url: "notes-pdf/English Grammar — विस्तृत अध्ययन सामग्री.pdf", pages: 13, size: "184 KB", tag: "New" }
+     pdfs: [
+      { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" },
+      { title: "English Grammar Notes", url: "notes-pdf/English_Grammar_Notes.pdf", pages: 13, size: "184 KB", tag: "New" }
     ]
   },
 
