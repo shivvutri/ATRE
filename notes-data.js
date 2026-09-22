@@ -56,7 +56,7 @@ const NOTES_DATA = [
         title: "पुरुष्कार 2026", 
         url: "notes-pdf/GS_Puraskar_Awards_upatre.pdf",
         pages: 3, 
-        size: "७३० KB",
+        size: "730 KB",
         tag: "New" 
       },
       { 
