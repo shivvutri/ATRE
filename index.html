@@ -376,6 +376,26 @@
   .news-title{font-size:1rem; font-weight:600; color:var(--ink);}
   .news-desc{font-size:.88rem; color:var(--ink-soft); margin-top:4px;}
 
+  /* ---------- Notice board carousel (2 notices visible, auto-swipe) ---------- */
+  .news-carousel{position:relative;}
+  .news-carousel-viewport{overflow:hidden; border-radius:var(--radius);}
+  .news-carousel-track{display:flex; transition:transform .5s ease;}
+  .news-slide{
+    flex:0 0 100%; min-width:100%; display:grid; grid-template-columns:1fr 1fr; gap:0 28px;
+  }
+  .news-slide .news-item{border-top:none; padding:16px 0;}
+  .news-slide .news-item:first-child{border-right:1px dashed var(--line); padding-right:24px;}
+  @media (max-width:700px){
+    .news-slide{grid-template-columns:1fr;}
+    .news-slide .news-item:first-child{border-right:none; border-bottom:1px dashed var(--line); padding-bottom:14px;}
+  }
+  .news-carousel-dots{display:flex; justify-content:center; gap:8px; margin-top:16px;}
+  .news-carousel-dots button{
+    width:8px; height:8px; padding:0; border-radius:50%; border:none; background:var(--line);
+    cursor:pointer; transition:background .2s ease, transform .2s ease;
+  }
+  .news-carousel-dots button.active{background:var(--maroon); transform:scale(1.25);}
+
   /* ---------- MCQ subject-wise ---------- */
   .mcq-panel{
     background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
@@ -484,6 +504,7 @@
         <li><a href="#mcq">MCQ Subject Wise</a></li>
         <li><a href="#mock">Full Length Mock</a></li>
         <li><a href="./notes.html">Notes</a></li>
+        <li><a href="./pyq.html">PYQ</a></li>
         <li><a href="#news">Exam News</a></li>
       </ul>
     </nav>
@@ -505,6 +526,7 @@
       <a href="#mcq" class="hero-cta hero-cta-primary">📝 Subject-wise MCQ Practice करें</a>
       <a href="#mock" class="hero-cta hero-cta-secondary">🎯 Full Length Mock Test दें</a>
       <a href="./notes.html" class="hero-cta hero-cta-secondary">📒 Subject Notes पढ़ें</a>
+      <a href="./pyq.html" class="hero-cta hero-cta-secondary">📄 Previous Year Papers (PYQ)</a>
     </div>
 
     <!-- Hall-ticket style key dates strip -->
@@ -531,6 +553,104 @@
 
 <main>
   <div class="wrap">
+
+    <!-- ===================== SECTION 0: Notice board (Dates और MCQ Practice के बीच) ===================== -->
+    <section id="news">
+      <div class="section-head">
+        <span class="kicker">Notice board</span>
+        <h2>सहायक अध्यापक भर्ती 2026 — Latest Exam News &amp; Notification</h2>
+        <p>UPESSC UP Assistant Teacher Recruitment 2026 की ताज़ा सूचनाएं, Important Dates और Result Updates।</p>
+      </div>
+
+      <!-- हर slide में 2 notices दिखती हैं, हर कुछ सेकंड में अपने आप अगली slide आ जाती है
+           (interval नीचे script में NEWS_AUTOPLAY_MS से बदल सकते हैं)। नई notice जोड़नी हो तो
+           यहाँ एक नया .news-item बना कर किसी slide में जोड़ दें (हर slide में ज़्यादा से ज़्यादा 2 items रखें,
+           ज़रूरत पड़े तो नई .news-slide बना लें)। -->
+      <div class="news-carousel" id="newsCarousel">
+        <div class="news-carousel-viewport">
+          <div class="news-carousel-track" id="newsCarouselTrack">
+
+            <div class="news-slide">
+              <div class="news-item">
+                <div class="news-date">16 Sep 2026</div>
+                <div class="news-body">
+                  <span class="news-tag new">New</span>
+                  <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
+                  <div class="news-desc">
+                    Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
+                    Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
+                  </div>
+                </div>
+              </div>
+              <div class="news-item">
+                <div class="news-date">15 Sep 2026</div>
+                <div class="news-body">
+                  <span class="news-tag notice">Notification</span>
+                  <span class="news-title">Official Notification PDF जारी — Advt. No. 05/2026</span>
+                  <div class="news-desc">
+                    UPESSC ने Official Notification PDF release की है। Vacancy: 11,508 (Urban Primary, Basic Education Dept.) + 897 (Sambaddh Primary, Boys/Girls Aided Schools) = <strong>12,405 कुल पद</strong>।
+                    <a href="https://www.upessc.up.gov.in/Notice/a429-726e-4862-f3dc-8a6f.pdf" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">Notification PDF देखें →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="news-slide">
+              <div class="news-item">
+                <div class="news-date">15 Oct 2026</div>
+                <div class="news-body">
+                  <span class="news-tag notice">Important Date</span>
+                  <span class="news-title">Application Fee Payment की Last Date — 15 October 2026</span>
+                  <div class="news-desc">
+                    General/OBC/EWS: ₹1,000 | SC/ST: ₹500 | PwBD: ₹300। Fee Debit Card, Credit Card या Net Banking से pay करें।
+                    Application Correction Window: <strong>19 October 2026</strong> तक खुली रहेगी।
+                  </div>
+                </div>
+              </div>
+              <div class="news-item">
+                <div class="news-date">3–4 Dec 2026</div>
+                <div class="news-body">
+                  <span class="news-tag notice">Exam Date</span>
+                  <span class="news-title">Written Exam (Chayan Pariksha) — 3 &amp; 4 December 2026 (Tentative)</span>
+                  <div class="news-desc">
+                    Exam 360 marks का होगा — 120 MCQ (Objective Type), 2 घंटे की अवधि। Correct answer: +3 marks | Wrong answer: –1 mark (Negative Marking)।
+                    Exam bilingual (Hindi &amp; English) होगा। Multiple shifts होने पर Normalization लागू होगा।
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="news-slide">
+              <div class="news-item">
+                <div class="news-date">Sep 2026</div>
+                <div class="news-body">
+                  <span class="news-tag notice">Eligibility</span>
+                  <span class="news-title">Eligibility: Graduation + B.T.C./D.El.Ed. + TET Qualified (Age: 21–40 वर्ष)</span>
+                  <div class="news-desc">
+                    Urban Primary Post के लिए: Graduate degree + B.T.C. / D.El.Ed. (NCTE recognised) + UP या Central TET (Class 1–5) qualify होना अनिवार्य।
+                    Age limit: 21–40 वर्ष (01.07.2026 के अनुसार)। SC/ST/OBC को 5 वर्ष, PwBD को 15 वर्ष की छूट।
+                    Salary: Pay Level-6 — ₹35,400–₹1,12,400 (7th CPC)।
+                  </div>
+                </div>
+              </div>
+              <div class="news-item">
+                <div class="news-date">16 Sep 2026</div>
+                <div class="news-body">
+                  <span class="news-tag new">New</span>
+                  <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
+                  <div class="news-desc">
+                    Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
+                    Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="news-carousel-dots" id="newsCarouselDots"></div>
+      </div>
+    </section>
 
     <!-- ===================== SECTION 1: MCQ Subject Wise ===================== -->
     <section id="mcq">
@@ -584,80 +704,6 @@
       <div class="mock-grid" id="mockGrid"></div>
     </section>
 
-    <!-- ===================== SECTION 3: Exam news ===================== -->
-    <section id="news">
-      <div class="section-head">
-        <span class="kicker">Notice board</span>
-        <h2>सहायक अध्यापक भर्ती 2026 — Latest Exam News &amp; Notification</h2>
-        <p>UPESSC UP Assistant Teacher Recruitment 2026 की ताज़ा सूचनाएं, Important Dates और Result Updates — सबसे नया सबसे ऊपर।</p>
-      </div>
-
-      <div class="news-list" id="newsList">
-
-        <div class="news-item">
-          <div class="news-date">16 Sep 2026</div>
-          <div class="news-body">
-            <span class="news-tag new">New</span>
-            <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
-            <div class="news-desc">
-              Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
-              Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="news-item">
-          <div class="news-date">15 Sep 2026</div>
-          <div class="news-body">
-            <span class="news-tag notice">Notification</span>
-            <span class="news-title">Official Notification PDF जारी — Advt. No. 05/2026</span>
-            <div class="news-desc">
-              UPESSC ने Official Notification PDF release की है। Vacancy: 11,508 (Urban Primary, Basic Education Dept.) + 897 (Sambaddh Primary, Boys/Girls Aided Schools) = <strong>12,405 कुल पद</strong>।
-              <a href="https://www.upessc.up.gov.in/Notice/a429-726e-4862-f3dc-8a6f.pdf" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">Notification PDF देखें →</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="news-item">
-          <div class="news-date">15 Oct 2026</div>
-          <div class="news-body">
-            <span class="news-tag notice">Important Date</span>
-            <span class="news-title">Application Fee Payment की Last Date — 15 October 2026</span>
-            <div class="news-desc">
-              General/OBC/EWS: ₹1,000 | SC/ST: ₹500 | PwBD: ₹300। Fee Debit Card, Credit Card या Net Banking से pay करें।
-              Application Correction Window: <strong>19 October 2026</strong> तक खुली रहेगी।
-            </div>
-          </div>
-        </div>
-
-        <div class="news-item">
-          <div class="news-date">3–4 Dec 2026</div>
-          <div class="news-body">
-            <span class="news-tag notice">Exam Date</span>
-            <span class="news-title">Written Exam (Chayan Pariksha) — 3 &amp; 4 December 2026 (Tentative)</span>
-            <div class="news-desc">
-              Exam 360 marks का होगा — 120 MCQ (Objective Type), 2 घंटे की अवधि। Correct answer: +3 marks | Wrong answer: –1 mark (Negative Marking)।
-              Exam bilingual (Hindi &amp; English) होगा। Multiple shifts होने पर Normalization लागू होगा।
-            </div>
-          </div>
-        </div>
-
-        <div class="news-item">
-          <div class="news-date">Sep 2026</div>
-          <div class="news-body">
-            <span class="news-tag notice">Eligibility</span>
-            <span class="news-title">Eligibility: Graduation + B.T.C./D.El.Ed. + TET Qualified (Age: 21–40 वर्ष)</span>
-            <div class="news-desc">
-              Urban Primary Post के लिए: Graduate degree + B.T.C. / D.El.Ed. (NCTE recognised) + UP या Central TET (Class 1–5) qualify होना अनिवार्य।
-              Age limit: 21–40 वर्ष (01.07.2026 के अनुसार)। SC/ST/OBC को 5 वर्ष, PwBD को 15 वर्ष की छूट।
-              Salary: Pay Level-6 — ₹35,400–₹1,12,400 (7th CPC)।
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
   </div>
 </main>
 
@@ -693,6 +739,56 @@
       menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
+
+  // ===================================================================
+  // Notice board carousel — हर slide में 2 notices, हर कुछ सेकंड में अपने आप
+  // अगली slide दिखती है। interval बदलना हो तो नीचे NEWS_AUTOPLAY_MS बदल दें।
+  // ===================================================================
+  const NEWS_AUTOPLAY_MS = 6000; // हर 6 सेकंड में अगली slide
+  const newsTrack = document.getElementById('newsCarouselTrack');
+  const newsDotsWrap = document.getElementById('newsCarouselDots');
+
+  if (newsTrack && newsDotsWrap) {
+    const slides = Array.from(newsTrack.children);
+    let current = 0;
+    let timer = null;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Notice slide ${i + 1}`);
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goTo(i));
+      newsDotsWrap.appendChild(dot);
+    });
+    const dots = Array.from(newsDotsWrap.children);
+
+    function render() {
+      newsTrack.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+    function goTo(i) {
+      current = (i + slides.length) % slides.length;
+      render();
+      restart();
+    }
+    function next() { goTo(current + 1); }
+    function start() {
+      if (slides.length > 1) timer = setInterval(next, NEWS_AUTOPLAY_MS);
+    }
+    function stop() { clearInterval(timer); }
+    function restart() { stop(); start(); }
+
+    // hover/focus पर pause — ताकि user पढ़ते वक़्त notice अचानक न बदले
+    const carousel = document.getElementById('newsCarousel');
+    carousel.addEventListener('mouseenter', stop);
+    carousel.addEventListener('mouseleave', start);
+    carousel.addEventListener('focusin', stop);
+    carousel.addEventListener('focusout', start);
+
+    render();
+    start();
+  }
 
   // ===================================================================
   // यह पूरा हिस्सा site-config.js (SUBJECT_QUIZZES, MOCK_TESTS) से डेटा
