@@ -108,7 +108,7 @@ const NOTES_DATA = [
     ],
      pdfs: [
       { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" },
-      { title: "English Grammar Notes", url: "notes-pdf/English_Grammar_Notes.pdf", pages: 13, size: "184 KB", tag: "New" }
+      { title: "English Grammar Notes", url: "notes-pdf/english-grammar.pdf", pages: 13, size: "184 KB", tag: "New" }
     ]
   },
 
