@@ -88,7 +88,7 @@ const NOTES_DATA = [
       "संस्कृत — मूलभूत अवधारणाएं"
     ],
     pdfs: [
-      // { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/hindi_grammar.pdf", pages: 25, size: "2.2 MB", tag: "" }
+    { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" }
     ]
   },
 
