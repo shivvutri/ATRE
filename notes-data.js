@@ -44,9 +44,28 @@ const NOTES_DATA = [
         pages: 17,
         size: "3.2 MB",
         tag: "New"
-      }
-      // ── अगली PDF यहाँ add करें ──
-      // { title: "राष्ट्रीय GK Notes 2026", url: "notes-pdf/national_gk.pdf", pages: 20, size: "2.5 MB", tag: "" },
+      },
+      { 
+        title: "राष्ट्रीय अंतरराष्ट्रीय घटनायें 2026",
+        url: "notes-pdf/GS_Rashtriya_Antarrashtriya_Ghatnayen_upatre.pdf",
+        pages: 3, 
+        size: "815 KB",
+        tag: "New" 
+      },
+      { 
+        title: "पुरुष्कार 2026", 
+        url: "notes-pdf/GS_Puraskar_Awards_upatre.pdf",
+        pages: 3, 
+        size: "७३० KB",
+        tag: "New" 
+      },
+      { 
+        title: "खेलकूद 2026", 
+        url: "notes-pdf/GS_Khel_Kood_Sports_upatre.pdf",
+        pages: 3, 
+        size: "730 KB",
+        tag: "New" 
+      },
     ]
   },
 
