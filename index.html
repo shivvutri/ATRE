@@ -309,6 +309,43 @@
     pointer-events:none;
   }
   .hero-inner{position:relative; padding:52px 24px 36px; max-width:var(--maxw); margin:0 auto;}
+  .hero-grid{display:grid; grid-template-columns:1.2fr 1fr; gap:36px; align-items:start;}
+  @media (max-width:900px){ .hero-grid{grid-template-columns:1fr; gap:24px;} }
+
+  .hero-news-card{
+    background:#fff; border-radius:var(--radius); overflow:hidden;
+    box-shadow:0 24px 60px -24px rgba(0,0,0,0.55);
+    display:flex; flex-direction:column;
+  }
+  .hero-news-card::before{content:""; display:block; height:3px; background:linear-gradient(90deg, var(--gold), var(--maroon));}
+  .hero-news-card-head{
+    padding:16px 22px 13px; border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .hero-news-card-head .kicker-row{display:flex; align-items:center; gap:7px;}
+  .live-dot{
+    width:6px; height:6px; border-radius:50%; background:var(--ok); flex-shrink:0;
+    box-shadow:0 0 0 0 rgba(28,107,69,.5); animation:live-pulse 1.8s infinite;
+  }
+  @keyframes live-pulse{
+    0%{box-shadow:0 0 0 0 rgba(28,107,69,.45);}
+    70%{box-shadow:0 0 0 6px rgba(28,107,69,0);}
+    100%{box-shadow:0 0 0 0 rgba(28,107,69,0);}
+  }
+  .hero-news-card-head .kicker{
+    font-family:var(--mono); font-size:.66rem; color:var(--maroon); letter-spacing:.05em;
+    font-weight:700; text-transform:uppercase;
+  }
+  .hero-news-card-head h2{font-family:var(--serif); font-size:1.05rem; color:var(--ink); font-weight:600;}
+  .hero-news-card-body{padding:6px 22px 16px;}
+  .hero-news-card-foot{
+    padding:10px 22px 16px; text-align:right; border-top:1px solid var(--line); margin-top:2px;
+  }
+  .hero-news-card-foot a{
+    font-family:var(--sans); font-size:.78rem; font-weight:600; color:var(--maroon); text-decoration:none;
+  }
+  .hero-news-card-foot a:hover{text-decoration:underline;}
+
   .eyebrow-tag{
     display:inline-flex; align-items:center; gap:7px; font-family:var(--mono); font-size:.72rem;
     color:#f3d9a1; background:rgba(154,107,12,0.22); border:1px solid rgba(184,134,11,0.4);
@@ -318,11 +355,11 @@
   .hero .hi-line{font-family:var(--sans); font-size:1.02rem; color:#c3cbdc; margin:8px 0 16px; max-width:50ch;}
   .hero p.lede{color:#aab4c9; font-size:1.02rem; max-width:56ch; margin-bottom:30px;}
 
-  .hero-cta-row{display:flex; flex-wrap:wrap; gap:12px; margin-bottom:28px;}
+  .hero-cta-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:28px;}
   .hero-cta{
-    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
-    font-family:var(--sans); font-weight:600; font-size:.95rem;
-    padding:13px 22px; border-radius:10px; border:1.5px solid transparent;
+    display:inline-flex; align-items:center; justify-content:center; gap:6px; text-decoration:none;
+    font-family:var(--sans); font-weight:600; font-size:.85rem; text-align:center; white-space:nowrap;
+    padding:13px 14px; border-radius:10px; border:1.5px solid transparent; flex:1 1 0;
     transition:transform .12s ease, box-shadow .12s ease;
   }
   .hero-cta:hover{transform:translateY(-1px);}
@@ -330,7 +367,8 @@
   .hero-cta-primary:hover{background:#b17c0e;}
   .hero-cta-secondary{background:rgba(255,255,255,.06); color:#fff; border-color:rgba(255,255,255,.35);}
   .hero-cta-secondary:hover{background:rgba(255,255,255,.14); border-color:#fff;}
-  @media (max-width:480px){ .hero-cta{flex:1 1 100%; justify-content:center;} }
+  @media (max-width:640px){ .hero-cta{flex:1 1 calc(50% - 5px);} }
+  @media (max-width:400px){ .hero-cta{flex:1 1 100%;} }
 
   /* Hall-ticket style key-dates strip */
   .ticket-strip{
@@ -355,55 +393,39 @@
   .section-head h2{font-size:1.55rem;}
   .section-head p{color:var(--ink-soft); font-size:.96rem; margin:0;}
 
-  /* Notice board: tighter padding/heading so the carousel gets the space */
-  #news{padding:20px 0 22px;}
-  .news-section-head{margin-bottom:8px;}
-  .news-section-head h2{font-size:1.05rem;}
-  .news-section-head .kicker{margin-bottom:4px;}
+  /* Notice board card lives inside the hero now — see .hero-news-card above */
 
-  /* ---------- News list ---------- */
-  .news-list{display:flex; flex-direction:column;}
+  /* ---------- News list (inside hero notice card) ---------- */
   .news-item{
-    display:flex; gap:12px; padding:10px 0; border-top:1px solid var(--line);
-    align-items:baseline; flex-wrap:wrap;
+    padding:11px 0; border-top:1px solid var(--line);
   }
-  .news-item:first-child{border-top:none;}
-  .news-date{
-    font-family:var(--mono); font-size:.7rem; color:var(--ink-soft); flex:0 0 74px; padding-top:2px;
-  }
-  .news-body{flex:1; min-width:200px;}
+  .news-item:first-child{padding-top:0; border-top:none;}
+  .news-meta{display:flex; align-items:center; gap:8px; margin-bottom:3px; flex-wrap:wrap;}
+  .news-date{font-family:var(--mono); font-size:.68rem; color:var(--ink-soft);}
   .news-tag{
     display:inline-block; font-size:.62rem; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
-    padding:1px 6px; border-radius:4px; margin-right:6px; vertical-align:middle;
+    padding:1px 6px; border-radius:4px;
   }
   .news-tag.new{background:var(--ok-bg); color:var(--ok);}
   .news-tag.notice{background:var(--gold-bg); color:var(--gold);}
   .news-tag.result{background:#eaeef5; color:var(--navy);}
-  .news-title{font-size:.86rem; font-weight:600; color:var(--ink); line-height:1.3;}
+  .news-title{font-size:.88rem; font-weight:600; color:var(--ink); line-height:1.35; display:block;}
   .news-desc{
-    font-size:.76rem; color:var(--ink-soft); margin-top:2px; line-height:1.4;
+    font-size:.78rem; color:var(--ink-soft); margin-top:3px; line-height:1.5;
     display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
   }
 
-  /* ---------- Notice board carousel (2 notices visible, auto-swipe) ---------- */
+  /* ---------- Notice board carousel (2 notices visible per slide, auto-swipe) ---------- */
   .news-carousel{position:relative;}
-  .news-carousel-viewport{overflow:hidden; border-radius:var(--radius);}
+  .news-carousel-viewport{overflow:hidden;}
   .news-carousel-track{display:flex; transition:transform .5s ease;}
-  .news-slide{
-    flex:0 0 100%; min-width:100%; display:grid; grid-template-columns:1fr 1fr; gap:0 20px;
-  }
-  .news-slide .news-item{border-top:none; padding:8px 0;}
-  .news-slide .news-item:first-child{border-right:1px dashed var(--line); padding-right:16px;}
-  @media (max-width:700px){
-    .news-slide{grid-template-columns:1fr;}
-    .news-slide .news-item:first-child{border-right:none; border-bottom:1px dashed var(--line); padding-bottom:8px;}
-  }
-  .news-carousel-dots{display:flex; justify-content:center; gap:6px; margin-top:8px;}
+  .news-slide{flex:0 0 100%; min-width:100%;}
+  .news-carousel-dots{display:flex; justify-content:center; gap:5px; margin-top:4px;}
   .news-carousel-dots button{
-    width:6px; height:6px; padding:0; border-radius:50%; border:none; background:var(--line);
-    cursor:pointer; transition:background .2s ease, transform .2s ease;
+    width:16px; height:4px; padding:0; border-radius:2px; border:none; background:var(--line);
+    cursor:pointer; transition:background .2s ease, width .2s ease;
   }
-  .news-carousel-dots button.active{background:var(--maroon); transform:scale(1.25);}
+  .news-carousel-dots button.active{background:var(--maroon); width:22px;}
 
   /* ---------- MCQ subject-wise ---------- */
   .mcq-panel{
@@ -525,17 +547,127 @@
 <!-- ===================== Hero ===================== -->
 <div class="hero">
   <div class="hero-inner">
-    <span class="eyebrow-tag">UPESSC · Advt. 05/2026 · 12,405 Posts</span>
-    <h1>सहायक अध्यापक भर्ती 2026 — UP Assistant Teacher Recruitment</h1>
-    <div class="hi-line">UPESSC · ताज़ा सूचनाएं, MCQ Practice &amp; Full Length Mock Test</div>
-    <p class="lede">UP Sahayak Adhyapak Bharti 2026 की सम्पूर्ण जानकारी एक जगह — Latest Notification, Important Dates, Subject-wise MCQ Practice और Full-Length Mock Tests।</p>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <span class="eyebrow-tag">UPESSC · Advt. 05/2026 · 12,405 Posts</span>
+        <h1>सहायक अध्यापक भर्ती 2026 — UP Assistant Teacher Recruitment</h1>
+        <div class="hi-line">UPESSC · ताज़ा सूचनाएं, MCQ Practice &amp; Full Length Mock Test</div>
+        <p class="lede">UP Sahayak Adhyapak Bharti 2026 की सम्पूर्ण जानकारी एक जगह — Latest Notification, Important Dates, Subject-wise MCQ Practice और Full-Length Mock Tests।</p>
 
-    <!-- Prominent quick-access CTAs — MCQ Practice और Mock Test ऊपर ही दिख जाएँ -->
-    <div class="hero-cta-row">
-      <a href="#mcq" class="hero-cta hero-cta-primary">📝 Subject-wise MCQ Practice करें</a>
-      <a href="#mock" class="hero-cta hero-cta-secondary">🎯 Full Length Mock Test दें</a>
-      <a href="./notes.html" class="hero-cta hero-cta-secondary">📒 Subject Notes पढ़ें</a>
-      <a href="./pyq.html" class="hero-cta hero-cta-secondary">📄 Previous Year Papers (PYQ)</a>
+        <!-- Prominent quick-access CTAs — MCQ Practice और Mock Test ऊपर ही दिख जाएँ -->
+        <div class="hero-cta-row">
+          <a href="#mcq" class="hero-cta hero-cta-primary">📝 MCQ Practice</a>
+          <a href="#mock" class="hero-cta hero-cta-secondary">🎯 Mock Test</a>
+          <a href="./notes.html" class="hero-cta hero-cta-secondary">📒 Notes</a>
+          <a href="./pyq.html" class="hero-cta hero-cta-secondary">📄 PYQ</a>
+        </div>
+      </div>
+
+      <!-- Notice board — hero text के बगल में, top पर ही दिखे -->
+      <div class="hero-news-card" id="news">
+        <div class="hero-news-card-head">
+          <div class="kicker-row">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span class="kicker">Notice board</span>
+          </div>
+          <h2>ताज़ा सूचनाएं</h2>
+        </div>
+
+        <!-- हर slide में 2 notices दिखती हैं, हर कुछ सेकंड में अपने आप अगली slide आ जाती है
+             (interval नीचे script में NEWS_AUTOPLAY_MS से बदल सकते हैं)। नई notice जोड़नी हो तो
+             यहाँ एक नया .news-item बना कर किसी slide में जोड़ दें (हर slide में ज़्यादा से ज़्यादा 2 items रखें,
+             ज़रूरत पड़े तो नई .news-slide बना लें)। -->
+        <div class="hero-news-card-body">
+          <div class="news-carousel" id="newsCarousel">
+            <div class="news-carousel-viewport">
+              <div class="news-carousel-track" id="newsCarouselTrack">
+
+                <div class="news-slide">
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">16 Sep 2026</span>
+                      <span class="news-tag new">New</span>
+                    </div>
+                    <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
+                    <div class="news-desc">
+                      Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
+                      Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
+                    </div>
+                  </div>
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">15 Sep 2026</span>
+                      <span class="news-tag notice">Notification</span>
+                    </div>
+                    <span class="news-title">Official Notification PDF जारी — Advt. No. 05/2026</span>
+                    <div class="news-desc">
+                      UPESSC ने Official Notification PDF release की है। Vacancy: 11,508 (Urban Primary, Basic Education Dept.) + 897 (Sambaddh Primary, Boys/Girls Aided Schools) = <strong>12,405 कुल पद</strong>।
+                      <a href="https://www.upessc.up.gov.in/Notice/a429-726e-4862-f3dc-8a6f.pdf" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">Notification PDF देखें →</a>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="news-slide">
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">15 Oct 2026</span>
+                      <span class="news-tag notice">Important Date</span>
+                    </div>
+                    <span class="news-title">Application Fee Payment की Last Date — 15 October 2026</span>
+                    <div class="news-desc">
+                      General/OBC/EWS: ₹1,000 | SC/ST: ₹500 | PwBD: ₹300। Fee Debit Card, Credit Card या Net Banking से pay करें।
+                      Application Correction Window: <strong>19 October 2026</strong> तक खुली रहेगी।
+                    </div>
+                  </div>
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">3–4 Dec 2026</span>
+                      <span class="news-tag notice">Exam Date</span>
+                    </div>
+                    <span class="news-title">Written Exam (Chayan Pariksha) — 3 &amp; 4 December 2026 (Tentative)</span>
+                    <div class="news-desc">
+                      Exam 360 marks का होगा — 120 MCQ (Objective Type), 2 घंटे की अवधि। Correct answer: +3 marks | Wrong answer: –1 mark (Negative Marking)।
+                      Exam bilingual (Hindi &amp; English) होगा। Multiple shifts होने पर Normalization लागू होगा।
+                    </div>
+                  </div>
+                </div>
+
+                <div class="news-slide">
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">Sep 2026</span>
+                      <span class="news-tag notice">Eligibility</span>
+                    </div>
+                    <span class="news-title">Eligibility: Graduation + B.T.C./D.El.Ed. + TET Qualified (Age: 21–40 वर्ष)</span>
+                    <div class="news-desc">
+                      Urban Primary Post के लिए: Graduate degree + B.T.C. / D.El.Ed. (NCTE recognised) + UP या Central TET (Class 1–5) qualify होना अनिवार्य।
+                      Age limit: 21–40 वर्ष (01.07.2026 के अनुसार)। SC/ST/OBC को 5 वर्ष, PwBD को 15 वर्ष की छूट।
+                      Salary: Pay Level-6 — ₹35,400–₹1,12,400 (7th CPC)।
+                    </div>
+                  </div>
+                  <div class="news-item">
+                    <div class="news-meta">
+                      <span class="news-date">16 Sep 2026</span>
+                      <span class="news-tag new">New</span>
+                    </div>
+                    <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
+                    <div class="news-desc">
+                      Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
+                      Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="news-carousel-dots" id="newsCarouselDots"></div>
+          </div>
+        </div>
+
+        <div class="hero-news-card-foot">
+          <a href="#mcq">Subject-wise MCQ Practice शुरू करें →</a>
+        </div>
+      </div>
     </div>
 
     <!-- Hall-ticket style key dates strip -->
@@ -562,103 +694,6 @@
 
 <main>
   <div class="wrap">
-
-    <!-- ===================== SECTION 0: Notice board (Dates और MCQ Practice के बीच) ===================== -->
-    <section id="news">
-      <div class="section-head news-section-head">
-        <span class="kicker">Notice board</span>
-        <h2>ताज़ा सूचनाएं — भर्ती 2026</h2>
-      </div>
-
-      <!-- हर slide में 2 notices दिखती हैं, हर कुछ सेकंड में अपने आप अगली slide आ जाती है
-           (interval नीचे script में NEWS_AUTOPLAY_MS से बदल सकते हैं)। नई notice जोड़नी हो तो
-           यहाँ एक नया .news-item बना कर किसी slide में जोड़ दें (हर slide में ज़्यादा से ज़्यादा 2 items रखें,
-           ज़रूरत पड़े तो नई .news-slide बना लें)। -->
-      <div class="news-carousel" id="newsCarousel">
-        <div class="news-carousel-viewport">
-          <div class="news-carousel-track" id="newsCarouselTrack">
-
-            <div class="news-slide">
-              <div class="news-item">
-                <div class="news-date">16 Sep 2026</div>
-                <div class="news-body">
-                  <span class="news-tag new">New</span>
-                  <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
-                  <div class="news-desc">
-                    Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
-                    Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
-                  </div>
-                </div>
-              </div>
-              <div class="news-item">
-                <div class="news-date">15 Sep 2026</div>
-                <div class="news-body">
-                  <span class="news-tag notice">Notification</span>
-                  <span class="news-title">Official Notification PDF जारी — Advt. No. 05/2026</span>
-                  <div class="news-desc">
-                    UPESSC ने Official Notification PDF release की है। Vacancy: 11,508 (Urban Primary, Basic Education Dept.) + 897 (Sambaddh Primary, Boys/Girls Aided Schools) = <strong>12,405 कुल पद</strong>।
-                    <a href="https://www.upessc.up.gov.in/Notice/a429-726e-4862-f3dc-8a6f.pdf" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">Notification PDF देखें →</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="news-slide">
-              <div class="news-item">
-                <div class="news-date">15 Oct 2026</div>
-                <div class="news-body">
-                  <span class="news-tag notice">Important Date</span>
-                  <span class="news-title">Application Fee Payment की Last Date — 15 October 2026</span>
-                  <div class="news-desc">
-                    General/OBC/EWS: ₹1,000 | SC/ST: ₹500 | PwBD: ₹300। Fee Debit Card, Credit Card या Net Banking से pay करें।
-                    Application Correction Window: <strong>19 October 2026</strong> तक खुली रहेगी।
-                  </div>
-                </div>
-              </div>
-              <div class="news-item">
-                <div class="news-date">3–4 Dec 2026</div>
-                <div class="news-body">
-                  <span class="news-tag notice">Exam Date</span>
-                  <span class="news-title">Written Exam (Chayan Pariksha) — 3 &amp; 4 December 2026 (Tentative)</span>
-                  <div class="news-desc">
-                    Exam 360 marks का होगा — 120 MCQ (Objective Type), 2 घंटे की अवधि। Correct answer: +3 marks | Wrong answer: –1 mark (Negative Marking)।
-                    Exam bilingual (Hindi &amp; English) होगा। Multiple shifts होने पर Normalization लागू होगा।
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="news-slide">
-              <div class="news-item">
-                <div class="news-date">Sep 2026</div>
-                <div class="news-body">
-                  <span class="news-tag notice">Eligibility</span>
-                  <span class="news-title">Eligibility: Graduation + B.T.C./D.El.Ed. + TET Qualified (Age: 21–40 वर्ष)</span>
-                  <div class="news-desc">
-                    Urban Primary Post के लिए: Graduate degree + B.T.C. / D.El.Ed. (NCTE recognised) + UP या Central TET (Class 1–5) qualify होना अनिवार्य।
-                    Age limit: 21–40 वर्ष (01.07.2026 के अनुसार)। SC/ST/OBC को 5 वर्ष, PwBD को 15 वर्ष की छूट।
-                    Salary: Pay Level-6 — ₹35,400–₹1,12,400 (7th CPC)।
-                  </div>
-                </div>
-              </div>
-              <div class="news-item">
-                <div class="news-date">16 Sep 2026</div>
-                <div class="news-body">
-                  <span class="news-tag new">New</span>
-                  <span class="news-title">UPESSC Advt. 05/2026 — Online Application शुरू (12,405 पद)</span>
-                  <div class="news-desc">
-                    Uttar Pradesh Shiksha Seva Chayan Aayog (UPESSC) ने 12,405 Sahayak Adhyapak (Primary Urban + Sambaddh Primary) पदों के लिए Online Registration शुरू कर दिया है।
-                    Apply करें: <a href="https://apply.upessc.org/" target="_blank" rel="noopener" style="color:var(--navy); font-weight:600;">apply.upessc.org</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-        <div class="news-carousel-dots" id="newsCarouselDots"></div>
-      </div>
-    </section>
 
     <!-- ===================== SECTION 1: MCQ Subject Wise ===================== -->
     <section id="mcq">
