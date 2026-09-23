@@ -43,31 +43,31 @@ const NOTES_DATA = [
         url: "notes-pdf/UP_Special_GK_Notes.pdf",
         pages: 17,
         size: "3.2 MB",
-        tag: "New"
+        tag: ""
       },
       { 
         title: "राष्ट्रीय अंतरराष्ट्रीय घटनायें 2026",
         url: "notes-pdf/GS_Rashtriya_Antarrashtriya_Ghatnayen_upatre.pdf",
         pages: 3, 
         size: "815 KB",
-        tag: "New" 
+        tag: "" 
       },
       { 
         title: "पुरुष्कार 2026", 
         url: "notes-pdf/GS_Puraskar_Awards_upatre.pdf",
         pages: 3, 
         size: "730 KB",
-        tag: "New" 
+        tag: "" 
       },
       { 
         title: "खेलकूद 2026", 
         url: "notes-pdf/GS_Khel_Kood_Sports_upatre.pdf",
         pages: 3, 
         size: "730 KB",
-        tag: "New" 
+        tag: "" 
       },
-      { title: "भारतीय संस्कृति एवं कला — Complete Notes", url: "notes-pdf/Bharatiya_Sanskriti_Kala.pdf", pages: 5, size: "65 KB", tag: "New" },
-      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein.pdf", pages: 4, size: "61 KB", tag: "New" }
+      { title: "भारतीय संस्कृति एवं कला — Complete Notes", url: "notes-pdf/Bharatiya_Sanskriti_Kala.pdf", pages: 5, size: "65 KB", tag: "" },
+      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein.pdf", pages: 4, size: "61 KB", tag: "" }
     ]
   },
 
@@ -88,7 +88,7 @@ const NOTES_DATA = [
       "Direction Sense, Letter Series"
     ],
     pdfs: [
-      { title: "Reasoning Short Notes", url: "notes-pdf/reasoning-notes-detailed.pdf", pages: 8, size: "294 KB", tag: "NEW" }
+      { title: "Reasoning Short Notes", url: "notes-pdf/reasoning-notes-detailed.pdf", pages: 8, size: "294 KB", tag: "" }
     ]
   },
 
@@ -110,7 +110,8 @@ const NOTES_DATA = [
     ],
      pdfs: [
       { title: "हिन्दी व्याकरण Notes", url: "notes-pdf/Hindi-Vyakaran-Notes.pdf", pages: 19, size: "225 KB", tag: "" },
-      { title: "English Grammar Notes", url: "notes-pdf/english-grammar.pdf", pages: 13, size: "184 KB", tag: "New" }
+      { title: "English Grammar Notes", url: "notes-pdf/english-grammar.pdf", pages: 13, size: "184 KB", tag: "" }
+       { title: "Sanskrit", url: "notes-pdf/sanskrit-fundamentals-notes.pdf", pages: 12, size: "299 KB", tag: "New" }
     ]
   },
 
