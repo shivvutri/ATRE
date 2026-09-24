@@ -73,8 +73,8 @@ export function formatDate(value) {
   }
 }
 
-export function makeSubmissionPdf({ quizTitle, candidateName, rollNo, score, maxScore, correct, wrong, unanswered, questions, answers }) {
-  const printWindow = window.open("", "_blank", "noopener,noreferrer,width=900,height=700");
+export function makeSubmissionPdf({ quizTitle, candidateName, rollNo, score, maxScore, correct, wrong, unanswered, questions, answers, printWindow: existingWindow }) {
+  const printWindow = existingWindow || window.open("", "_blank", "noopener,noreferrer,width=900,height=700");
   if (!printWindow) {
     alert("Popup blocked है। कृपया popup allow करके फिर PDF button दबाएँ।");
     return;
