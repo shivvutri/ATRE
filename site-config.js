@@ -55,6 +55,11 @@ const SUBJECT_QUIZZES = {
     { url: "./reasoning-quiz-2.html", label: "सेट 2" },
     { url: "./reasoning-quiz-3.html", label: "सेट 3" }
   ],
+  computer: [
+    { url: "./computer-quiz-1.html", label: "सेट 1" },
+    { url: "./computer-quiz-2.html", label: "सेट 2" },
+    { url: "./computer-quiz-3.html", label: "सेट 3" }
+  ],
 };
 
 const MOCK_TESTS = [
