@@ -73,37 +73,69 @@ export function formatDate(value) {
   }
 }
 
-export function makeSubmissionPdf({ quizTitle, candidateName, rollNo, score, maxScore, correct, wrong, unanswered, questions, answers, printWindow: existingWindow }) {
-  const printWindow = existingWindow || window.open("", "_blank", "noopener,noreferrer,width=900,height=700");
-  if (!printWindow) {
-    alert("Popup blocked है। कृपया popup allow करके फिर PDF button दबाएँ।");
+export function makeSubmissionPdf({ quizTitle, candidateName, rollNo, score, maxScore, correct, wrong, unanswered, questions, answers }) {
+  let rows = "";
+  try {
+    rows = questions.map((q, i) => {
+      const selected = answers[i] ?? -1;
+      const selectedText = selected >= 0 ? `${LETTERS[selected]}. ${escapeHtml(q.options[selected])}` : "अनुत्तरित";
+      const correctText = `${LETTERS[q.answer]}. ${escapeHtml(q.options[q.answer])}`;
+      const status = selected < 0 ? "अनुत्तरित" : selected === q.answer ? "सही" : "गलत";
+      const mark = selected < 0 ? "0" : selected === q.answer ? "+3" : "−1";
+      return `<tr>
+        <td>${i + 1}</td>
+        <td>${escapeHtml(q.question)}</td>
+        <td>${selectedText}</td>
+        <td>${correctText}</td>
+        <td>${status}</td>
+        <td>${mark}</td>
+      </tr>`;
+    }).join("");
+  } catch (err) {
+    console.error("makeSubmissionPdf error:", err, { questions, answers });
+    alert("PDF बनाने में error आई। कृपया Console (F12) खोलकर लाल error का text भेजें।");
     return;
   }
 
-  const rows = questions.map((q, i) => {
-    const selected = answers[i] ?? -1;
-    const selectedText = selected >= 0 ? `${LETTERS[selected]}. ${escapeHtml(q.options[selected])}` : "अनुत्तरित";
-    const correctText = `${LETTERS[q.answer]}. ${escapeHtml(q.options[q.answer])}`;
-    const status = selected < 0 ? "अनुत्तरित" : selected === q.answer ? "सही" : "गलत";
-    const mark = selected < 0 ? "0" : selected === q.answer ? "+3" : "−1";
-    return `<tr>
-      <td>${i + 1}</td>
-      <td>${escapeHtml(q.question)}</td>
-      <td>${selectedText}</td>
-      <td>${correctText}</td>
-      <td>${status}</td>
-      <td>${mark}</td>
-    </tr>`;
-  }).join("");
+  // Same-page print area — no new window/tab, so no popup blocker involved.
+  let area = document.getElementById("__quizPdfPrintArea");
+  if (!area) {
+    area = document.createElement("div");
+    area.id = "__quizPdfPrintArea";
+    document.body.appendChild(area);
+  }
 
-  printWindow.document.write(`<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>${escapeHtml(quizTitle)} - Submission Report</title>
-  <style>
-    @page{size:A4;margin:12mm}body{font-family:"Noto Sans Devanagari","Nirmala UI",Arial,sans-serif;color:#111;line-height:1.45}h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:14px 0 6px}.muted{color:#555;font-size:11px}.meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0}.box{border:1px solid #ddd;border-radius:8px;padding:8px}.score{font-size:22px;font-weight:800}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.summary .box{text-align:center}.summary b{display:block;font-size:15px}table{width:100%;border-collapse:collapse;font-size:8.5px;margin-top:8px}th,td{border:1px solid #bbb;padding:5px;vertical-align:top}th{background:#f2f4f7}footer{margin-top:12px;font-size:9px;color:#666}@media print{button{display:none}}</style></head><body>
-  <h1>${escapeHtml(quizTitle)}</h1><div class="muted">UP Assistant Teacher — Hindi Practice Submission Report</div>
-  <div class="meta"><div class="box"><b>अभ्यर्थी:</b> ${escapeHtml(candidateName)}</div><div class="box"><b>रोल/रजिस्ट्रेशन:</b> ${escapeHtml(rollNo || "—")}</div></div>
-  <div class="summary"><div class="box"><b class="score">${score} / ${maxScore}</b>स्कोर</div><div class="box"><b>${correct}</b>सही</div><div class="box"><b>${wrong}</b>गलत</div><div class="box"><b>${unanswered}</b>अनुत्तरित</div></div>
-  <h2>उत्तर-पत्र विश्लेषण</h2><table><thead><tr><th>प्र.</th><th>प्रश्न</th><th>आपका उत्तर</th><th>सही उत्तर</th><th>स्थिति</th><th>अंक</th></tr></thead><tbody>${rows}</tbody></table>
-  <footer>मार्किंग: सही उत्तर +3, गलत उत्तर −1, अनुत्तरित 0. यह practice submission है; आधिकारिक परीक्षा/भर्ती निर्देश संबंधित आयोग की सूचना के अनुसार मान्य होंगे।</footer>
-  <script>window.onload=()=>setTimeout(()=>window.print(),350);</script></body></html>`);
-  printWindow.document.close();
+  area.innerHTML = `
+    <style>
+      #__quizPdfPrintArea{display:none;}
+      @media print{
+        body > *:not(#__quizPdfPrintArea){display:none !important;}
+        #__quizPdfPrintArea{
+          display:block !important; position:static; width:100%;
+          font-family:"Noto Sans Devanagari","Nirmala UI",Arial,sans-serif; color:#111; line-height:1.45;
+        }
+        #__quizPdfPrintArea h1{font-size:20px;margin:0 0 4px;}
+        #__quizPdfPrintArea h2{font-size:15px;margin:14px 0 6px;}
+        #__quizPdfPrintArea .muted{color:#555;font-size:11px;}
+        #__quizPdfPrintArea .meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:12px 0;}
+        #__quizPdfPrintArea .box{border:1px solid #ddd;border-radius:8px;padding:8px;}
+        #__quizPdfPrintArea .score{font-size:22px;font-weight:800;}
+        #__quizPdfPrintArea .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+        #__quizPdfPrintArea .summary .box{text-align:center;}
+        #__quizPdfPrintArea .summary b{display:block;font-size:15px;}
+        #__quizPdfPrintArea table{width:100%;border-collapse:collapse;font-size:8.5px;margin-top:8px;}
+        #__quizPdfPrintArea th, #__quizPdfPrintArea td{border:1px solid #bbb;padding:5px;vertical-align:top;}
+        #__quizPdfPrintArea th{background:#f2f4f7;}
+        #__quizPdfPrintArea footer{margin-top:12px;font-size:9px;color:#666;}
+        @page{size:A4;margin:12mm;}
+      }
+    </style>
+    <h1>${escapeHtml(quizTitle)}</h1><div class="muted">UP Assistant Teacher — Hindi Practice Submission Report</div>
+    <div class="meta"><div class="box"><b>अभ्यर्थी:</b> ${escapeHtml(candidateName)}</div><div class="box"><b>रोल/रजिस्ट्रेशन:</b> ${escapeHtml(rollNo || "—")}</div></div>
+    <div class="summary"><div class="box"><b class="score">${score} / ${maxScore}</b>स्कोर</div><div class="box"><b>${correct}</b>सही</div><div class="box"><b>${wrong}</b>गलत</div><div class="box"><b>${unanswered}</b>अनुत्तरित</div></div>
+    <h2>उत्तर-पत्र विश्लेषण</h2><table><thead><tr><th>प्र.</th><th>प्रश्न</th><th>आपका उत्तर</th><th>सही उत्तर</th><th>स्थिति</th><th>अंक</th></tr></thead><tbody>${rows}</tbody></table>
+    <footer>मार्किंग: सही उत्तर +3, गलत उत्तर −1, अनुत्तरित 0. यह practice submission है; आधिकारिक परीक्षा/भर्ती निर्देश संबंधित आयोग की सूचना के अनुसार मान्य होंगे।</footer>
+  `;
+
+  window.print();
 }
