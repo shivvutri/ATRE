@@ -72,5 +72,5 @@ const SUBJECT_QUIZZES = {
 const MOCK_TESTS = [
   { number: 1, url: "./mock-test-1.html", live: true },
   { number: 2, url: "./mock-test-2.html", live: true },
-  { number: 3, url: "./mock-test-3.html", live: false }
+  { number: 3, url: "./mock-test-3.html", live: true }
 ];
