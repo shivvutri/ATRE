@@ -132,7 +132,7 @@ const NOTES_DATA = [
       "पर्यावरण एवं प्राकृतिक संसाधन"
     ],
     pdfs: [
-      // { title: "विज्ञान Short Notes", url: "notes-pdf/science.pdf", pages: 18, size: "2.0 MB", tag: "" }
+      { title: "विज्ञान Short Notes", url: "notes-pdf/science.pdf", pages: 18, size: "2.0 MB", tag: "" }
     ]
   },
 
