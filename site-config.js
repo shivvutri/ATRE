@@ -60,6 +60,13 @@ const SUBJECT_QUIZZES = {
     { url: "./computer-quiz-2.html", label: "सेट 2" },
     { url: "./computer-quiz-3.html", label: "सेट 3" }
   ],
+  gk: [
+    { url: "./gk-quiz-1.html", label: "सेट 1" },
+    { url: "./gk-quiz-2.html", label: "सेट 2" },
+    { url: "./gk-quiz-3.html", label: "सेट 3" },
+    { url: "./gk-quiz-4.html", label: "सेट 4" },
+    { url: "./gk-quiz-5.html", label: "सेट 5" }
+  ],
 };
 
 const MOCK_TESTS = [
