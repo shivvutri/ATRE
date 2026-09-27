@@ -153,7 +153,7 @@ const NOTES_DATA = [
       "बीजगणित, सामान्य ज्यामिति"
     ],
     pdfs: [
-      // { title: "गणित Formula Sheet", url: "notes-pdf/maths_formula.pdf", pages: 10, size: "1.2 MB", tag: "" }
+       { title: "गणित Formula Sheet", url: "notes-pdf/maths.pdf", pages: 23 , size: "636 KB", tag: "" }
     ]
   },
 
