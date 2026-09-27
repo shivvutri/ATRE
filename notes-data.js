@@ -174,7 +174,7 @@ const NOTES_DATA = [
       "पर्यावरण संरक्षण, आपदा प्रबंधन"
     ],
     pdfs: [
-      // { title: "EVS Notes PDF", url: "notes-pdf/evs.pdf", pages: 20, size: "2.3 MB", tag: "" }
+      { title: "प्रथ्वी की संरचना, नदियाँ और पर्वत", url: "notes-pdf/evs-part-1.pdf", pages: 16, size: "1.5 MB", tag: "" }
     ]
   },
 
