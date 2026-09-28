@@ -175,7 +175,7 @@ const NOTES_DATA = [
       "पर्यावरण संरक्षण, आपदा प्रबंधन"
     ],
     pdfs: [
-      { title: "प्रथ्वी की संरचना, नदियाँ और पर्वत", url: "notes-pdf/evs-part-1.pdf", pages: 16, size: "1.5 MB", tag: "" }
+      { title: "भूगोल सम्पूर्ण नोट्स", url: "notes-pdf/geography.pdf", pages: 47, size: "4.4 MB", tag: "New" }
     ]
   },
 
