@@ -67,7 +67,8 @@ const NOTES_DATA = [
         tag: "" 
       },
       { title: "भारतीय संस्कृति एवं कला — Complete Notes", url: "notes-pdf/Bharatiya_Sanskriti_Kala.pdf", pages: 5, size: "65 KB", tag: "" },
-      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein.pdf", pages: 4, size: "61 KB", tag: "" }
+      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein.pdf", pages: 4, size: "61 KB", tag: "" },
+       { title: "Current Affairs - Complete Notes", url: "notes-pdf/current-affairs.pdf", pages: 30, size: "8.3 MB", tag: "New" }
     ]
   },
 
