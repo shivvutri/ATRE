@@ -177,6 +177,7 @@ const NOTES_DATA = [
     pdfs: [
       { title: "भूगोल सम्पूर्ण नोट्स", url: "notes-pdf/geography.pdf", pages: 47, size: "4.4 MB", tag: "New" },
       { title: "भारतीय स्वतंत्रता संग्राम समाज सुधारक सांस्कृतिक विरासत", url: "notes-pdf/history.pdf", pages: 30, size: "7.4 MB", tag: "New" }
+      { title: "भारत की राज्य व्यवस्था एवं संविधान", url: "notes-pdf/polity.pdf", pages: 30, size: "4.2 MB", tag: "New" },
     ]
   },
 
@@ -197,7 +198,7 @@ const NOTES_DATA = [
       "शैक्षिक मूल्यांकन एवं प्रबंधन"
     ],
     pdfs: [
-      // { title: "शिक्षण कौशल Notes", url: "notes-pdf/teaching_skills.pdf", pages: 15, size: "1.9 MB", tag: "" }
+     { title: "शिक्षण कौशल Notes", url: "notes-pdf/shikshan-kaushal.pdf", pages: 12, size: "1.9 MB", tag: "New" }
     ]
   },
 
