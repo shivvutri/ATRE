@@ -239,7 +239,7 @@ const NOTES_DATA = [
       "Digital शिक्षण सामग्री का उपयोग"
     ],
     pdfs: [
-      // { title: "ICT Notes PDF", url: "notes-pdf/ict.pdf", pages: 8, size: "1.0 MB", tag: "" }
+    { title: "ICT Notes PDF", url: "notes-pdf/ict.pdf", pages: 8, size: "1.0 MB", tag: "" }
     ]
   },
 
