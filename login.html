@@ -4,57 +4,140 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16233f">
 <title>Student Login | UP Sahayak Adhyapak Bharti</title>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--nv:#16233f;--nvd:#0e1729;--paper:#eef1f4;--line:#d7dce2;--ink:#182238;--soft:#4a5568;--gold:#9a6b0c;--mr:#7a1f2b;--goldbg:#f5ecd8;
+:root{--nv:#16233f;--nvd:#0e1729;--paper:#eef1f4;--line:#d7dce2;--ink:#182238;--soft:#4a5568;--gold:#9a6b0c;--gl:#f3cf7a;--mr:#7a1f2b;--goldbg:#f5ecd8;--wa:#12784a;--wad:#0d5f3a;
 --serif:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans","IBM Plex Sans Devanagari",system-ui,sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;line-height:1.55;}
-.shell{width:100%;max-width:880px;display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(14,23,41,.16);}
-@media(max-width:760px){.shell{grid-template-columns:1fr;}.side{display:none;}}
-.side{background:var(--nv);color:#fff;padding:32px 28px;display:flex;flex-direction:column;gap:20px;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;
+padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));line-height:1.55;}
+
+/* Layout: desktop = left pitch | right login+buy. Mobile = pitch strip, login, buy, details */
+.shell{width:100%;max-width:960px;display:grid;grid-template-columns:1fr 1.05fr;grid-template-rows:auto 1fr;
+grid-template-areas:"top form" "perks form";background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(14,23,41,.16);}
+.top{grid-area:top;}.perks{grid-area:perks;}.form{grid-area:form;}
+.top,.perks{background:var(--nv);color:#fff;padding:0 28px;}
+.top{padding-top:32px;display:flex;flex-direction:column;gap:18px;}
+.perks{padding-top:22px;padding-bottom:32px;}
+
 .brand{display:flex;align-items:center;gap:11px;}
-.mk{width:42px;height:42px;border-radius:8px;background:#b8860b;color:var(--nvd);font:700 1rem var(--serif);display:flex;align-items:center;justify-content:center;}
+.mk{width:42px;height:42px;border-radius:8px;background:#b8860b;color:var(--nvd);font:700 1rem var(--serif);display:flex;align-items:center;justify-content:center;flex:none;}
 .brand b{display:block;font:600 1rem var(--serif);}.brand span{font-size:.74rem;color:#b9c2d6;}
-.side h2{font:600 1.45rem/1.3 var(--serif);}
-.side ul{list-style:none;display:grid;gap:11px;font-size:.88rem;color:#d6dcea;}
+.top h2{font:600 1.5rem/1.3 var(--serif);}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.tiles div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:10px;padding:10px 6px;text-align:center;}
+.tiles b{display:block;font:700 1.4rem/1.15 var(--serif);color:var(--gl);}
+.tiles span{font-size:.74rem;color:#d6dcea;line-height:1.3;display:block;margin-top:2px;}
+
+.perks h3{font:600 1.05rem var(--serif);color:var(--gl);margin-bottom:12px;padding-top:18px;border-top:1px solid rgba(255,255,255,.16);}
+.perks ul{list-style:none;display:grid;gap:14px;}
+.perks li{display:grid;grid-template-columns:26px 1fr;gap:8px;font-size:.88rem;color:#d6dcea;}
+.perks li strong{display:block;color:#fff;font-weight:600;}
+.rules{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px;}
+.rules i{font-style:normal;font-size:.78rem;background:rgba(243,207,122,.14);border:1px solid rgba(243,207,122,.35);color:var(--gl);border-radius:6px;padding:2px 8px;}
+
 .form{padding:32px;}
 .form h1{font:600 1.4rem var(--serif);margin-bottom:4px;}
 .sub{font-size:.86rem;color:var(--soft);margin-bottom:18px;}
 label{display:block;font-size:.82rem;font-weight:600;margin:12px 0 5px;}
-input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font:400 .95rem var(--sans);color:var(--ink);}
-input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
-.pw{position:relative;}.pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--soft);font:600 .78rem var(--sans);cursor:pointer;padding:6px;}
-.go{width:100%;margin-top:18px;padding:12px;border:0;border-radius:9px;background:var(--nv);color:#fff;font:700 .95rem var(--sans);cursor:pointer;}
+input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font:400 1rem var(--sans);color:var(--ink);min-height:46px;}
+input:focus-visible,button:focus-visible,.btn:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.pw{position:relative;}.pw input{padding-right:84px;}
+.pw button{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--soft);font:600 .8rem var(--sans);cursor:pointer;padding:12px 10px;}
+.go{width:100%;margin-top:18px;padding:12px;min-height:48px;border:0;border-radius:9px;background:var(--nv);color:#fff;font:700 1rem var(--sans);cursor:pointer;}
 .go:hover{background:var(--nvd);}.go:disabled{opacity:.6;cursor:wait;}
 .err{margin-top:12px;font-size:.86rem;color:var(--mr);min-height:1.2em;}
 .info{background:var(--goldbg);border:1px solid #e3d3a8;border-radius:9px;padding:10px 12px;font-size:.85rem;margin-bottom:14px;}
-.hint{font-size:.78rem;color:var(--soft);margin-top:14px;text-align:center;}
+
+/* Buy / contact */
+.buy{margin-top:22px;padding-top:20px;border-top:1px dashed var(--line);}
+.buy h2{font:600 1.15rem var(--serif);margin-bottom:8px;}
+.price{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;background:var(--goldbg);border:1px solid #e3d3a8;border-radius:10px;padding:10px 14px;margin-bottom:12px;}
+.price b{font:700 1.9rem/1 var(--serif);color:var(--nvd);}
+.price span{font-size:.88rem;color:var(--soft);}
+.cta{display:grid;gap:10px;}
+.btn{display:flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:11px 14px;border-radius:9px;font:700 .95rem var(--sans);text-decoration:none;border:2px solid transparent;}
+.btn svg{width:20px;height:20px;flex:none;}
+.btn.wa{background:var(--wa);color:#fff;}.btn.wa:hover{background:var(--wad);}
+.btn.mail{background:#fff;color:var(--nv);border-color:var(--nv);}.btn.mail:hover{background:var(--paper);}
+.contact{font-size:.82rem;color:var(--soft);margin-top:12px;overflow-wrap:anywhere;}
+.contact a{color:var(--ink);font-weight:600;}
+.hint{font-size:.8rem;color:var(--soft);margin-top:16px;text-align:center;}
 .hint a{color:var(--gold);font-weight:600;}
+
+@media(max-width:760px){
+  body{padding:10px max(10px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left));align-items:flex-start;}
+  .shell{grid-template-columns:1fr;grid-template-rows:auto;grid-template-areas:"top" "form" "perks";border-radius:12px;}
+  .top,.perks{padding-left:18px;padding-right:18px;}
+  .top{padding-top:18px;padding-bottom:18px;gap:14px;}
+  .top h2{font-size:1.2rem;}
+  .perks{padding-bottom:22px;}
+  .form{padding:22px 18px;}
+  .tiles b{font-size:1.2rem;}
+}
+@media(prefers-reduced-motion:no-preference){.btn,.go{transition:background .15s;}}
 </style>
 </head>
 <body>
 <div class="shell">
-  <aside class="side">
+
+  <section class="top" aria-label="UP Sahayak Adhyapak Bharti">
     <div class="brand"><div class="mk">UP</div><div><b>UP Sahayak Adhyapak Bharti</b><span>Assistant Teacher Recruitment</span></div></div>
-    <h2>Apni taiyari, ek jagah, ek login se</h2>
-    <ul><li>📒 Poore Notes PDF</li><li>📝 Sabhi MCQ sets</li><li>🏆 Full Mock Test leaderboard</li></ul>
-  </aside>
+    <h2>Poori taiyari, ek login me, sirf ₹499</h2>
+    <div class="tiles">
+      <div><b>1000+</b><span>MCQ</span></div>
+      <div><b>120</b><span>prashn ka Mock Test</span></div>
+      <div><b>₹499</b><span>Notes + MCQ + Mock</span></div>
+    </div>
+  </section>
+
   <main class="form">
     <h1>Student Login</h1>
     <p class="sub">Aapko diya gaya Login ID aur Password daalein.</p>
     <div class="info" id="info" hidden></div>
     <form id="f">
       <label for="id">Login ID</label>
-      <input id="id" type="text" autocomplete="username" autocapitalize="none" placeholder="Jaise: mobile number ya student ID" required>
+      <input id="id" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="Jaise: mobile number ya student ID" required>
       <label for="pw">Password</label>
       <div class="pw"><input id="pw" type="password" autocomplete="current-password" placeholder="Aapko diya gaya password" required><button type="button" id="show">Dikhayein</button></div>
       <button class="go" id="go" type="submit">Login karein</button>
       <div class="err" id="err" role="alert"></div>
     </form>
-    <p class="hint">ID ya password nahi mila? Apne teacher se sampark karein. <a href="./index.html">Home par jayein</a></p>
+
+    <section class="buy" aria-labelledby="buy-h">
+      <h2 id="buy-h">Abhi tak access nahi hai?</h2>
+      <div class="price"><b>₹499</b><span>me Notes, 1000+ MCQ aur Mock Tests</span></div>
+      <div class="cta">
+        <a class="btn wa" target="_blank" rel="noopener"
+           href="https://wa.me/919286733232?text=Namaste!%20Mujhe%20upatre.online%20par%20UP%20Assistant%20Teacher%20ka%20Notes%2C%20MCQ%20aur%20Mock%20Test%20access%20499%20rupaye%20me%20lena%20hai.%20Kripya%20payment%20ki%20jaankari%20dein.">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v12H9l-5 4z"/></svg>
+          WhatsApp par kharidein
+        </a>
+        <a class="btn mail"
+           href="mailto:sankalpcomputerclasses1@gmail.com?subject=UP%20Assistant%20Teacher%20access%20-%20499%20rupaye&body=Namaste%2C%0D%0A%0D%0AMujhe%20upatre.online%20par%20UP%20Assistant%20Teacher%20ka%20Notes%2C%20MCQ%20aur%20Mock%20Test%20access%20499%20rupaye%20me%20lena%20hai.%0D%0A%0D%0ANaam%3A%0D%0AMobile%20number%3A%0D%0A">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+          Email bhejein
+        </a>
+      </div>
+      <p class="contact">WhatsApp / call: <a href="tel:+919286733232">+91 92867 33232</a><br>Email: <a href="mailto:sankalpcomputerclasses1@gmail.com">sankalpcomputerclasses1@gmail.com</a></p>
+    </section>
+
+    <p class="hint">ID ya password bhool gaye? Upar diye WhatsApp number par likhein. <a href="./index.html">Home par jayein</a></p>
   </main>
+
+  <section class="perks" aria-labelledby="perks-h">
+    <h3 id="perks-h">Aapko kya milega</h3>
+    <ul>
+      <li><span aria-hidden="true">📝</span><div><strong>1000+ MCQ</strong>UP Assistant Teacher 2026 ke syllabus par aadharit, sabhi vishayon ke liye.</div></li>
+      <li><span aria-hidden="true">🎯</span><div><strong>Mock Test, bilkul original exam jaisa</strong>UPESSC ke exam pattern par marking.
+        <div class="rules"><i>120 prashn</i><i>120 minute</i><i>har prashn 3 ank</i><i>galat par −1 ank</i></div></div></li>
+      <li><span aria-hidden="true">📒</span><div><strong>To-the-point Notes</strong>Kam padhna, poora coverage. Syllabus ke har vishay ke liye seedhe kaam ke notes.</div></li>
+      <li><span aria-hidden="true">🏆</span><div><strong>Full Mock Test leaderboard</strong>Dusre students ke saath apni rank dekhein.</div></li>
+    </ul>
+  </section>
+
 </div>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
