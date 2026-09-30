@@ -13,8 +13,11 @@ function toLogin(m) {
   const next = location.pathname.split("/").pop() + location.search;
   location.replace("./login.html?next=" + encodeURIComponent(next) + (m ? "&m=" + m : ""));
 }
-function reveal(name) {
+function reveal(d) {
   if (shown) return; shown = true;
+  const name = d.name;
+  window.ATRE_USER = { name: d.name || "", loginId: d.loginId || "" };
+  window.dispatchEvent(new CustomEvent("atre-user"));
   document.getElementById("gate-hide")?.remove();
   const b = document.createElement("button");
   b.textContent = "Logout" + (name ? " · " + name : "");
@@ -37,7 +40,7 @@ onAuthStateChanged(auth, async (u) => {
       if (!s.exists() || s.data().sid !== sid) {
         localStorage.removeItem("atre_sid"); await signOut(auth); return toLogin("kicked");
       }
-      reveal(st.data().name);
+      reveal(st.data());
     }, (e) => { console.error(e); toLogin(); });
   } catch (e) { console.error(e); toLogin(); }
 });

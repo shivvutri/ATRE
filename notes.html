@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="hi-IN">
 <head>
+<style id="gate-hide">html{visibility:hidden}</style>
+<script type="module" src="./auth-gate.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>सहायक अध्यापक भर्ती 2026 Notes PDF | UP Assistant Teacher Study Material | UPESSC</title>
@@ -295,7 +297,7 @@ function renderCards(){
           </div>
           <div class="pdf-meta">${p.pages ? p.pages+' pages' : ''} ${p.size ? '· '+p.size : ''}</div>
         </div>
-        <a class="dl-btn" href="${p.url}" target="_blank" rel="noopener">
+        <a class="dl-btn" href="./viewer.html?file=${encodeURIComponent(p.url)}" target="_blank" rel="noopener">
           👁 View
         </a>
       </div>

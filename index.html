@@ -965,7 +965,7 @@
     if (!p || !row) return;
     var box = document.createElement('div'), b = document.createElement('b'), sm = document.createElement('small'), a = document.createElement('a');
     b.textContent = p.title; sm.textContent = (p.pages ? p.pages + ' pages' : '') + (p.size ? ' · ' + p.size : '') + ' · Free sample';
-    a.className = 'sample-btn'; a.href = p.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '👁 View';
+    a.className = 'sample-btn'; a.href = './viewer.html?file=' + encodeURIComponent(p.url); a.target = '_blank'; a.rel = 'noopener'; a.textContent = '👁 View';
     box.appendChild(b); box.appendChild(sm); row.appendChild(box); row.appendChild(a); row.hidden = false;
   })();
 </script>

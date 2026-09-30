@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Notes Viewer | UP Sahayak Adhyapak Bharti</title>
+<style>
+:root{--nv:#16233f;--gold:#f3d9a1;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#5b6472;font-family:system-ui,"Noto Sans Devanagari",sans-serif;color:#fff;-webkit-user-select:none;user-select:none;}
+.bar{position:sticky;top:0;z-index:5;background:var(--nv);padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;display:flex;align-items:center;gap:12px;font-size:.88rem;}
+.bar a{color:var(--gold);text-decoration:none;font-weight:600;white-space:nowrap;}
+.bar span{color:#cdd5e5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+#pages{display:flex;flex-direction:column;align-items:center;gap:12px;padding:14px 8px 60px;}
+.pg{background:#fff;width:100%;max-width:900px;box-shadow:0 4px 14px rgba(0,0,0,.35);}
+canvas{display:block;width:100%;height:auto;}
+#msg{text-align:center;padding:40px 16px;font-size:.95rem;}
+@media print{body{display:none!important}}
+</style>
+<script src="./notes-data.js"></script>
+<script>
+  // File sirf notes-data.js ki list se; pehli PDF free sample hai, baaki ke liye login zaroori
+  var norm = function (u) { return String(u || "").replace(/^\.\//, ""); };
+  var FILE = new URLSearchParams(location.search).get("file") || "";
+  var ALL = [];
+  if (typeof NOTES_DATA !== "undefined") NOTES_DATA.forEach(function (s) { (s.pdfs || []).forEach(function (p) { ALL.push(p); }); });
+  var PDF = ALL.filter(function (p) { return norm(p.url) === norm(FILE); })[0] || null;
+  window.IS_SAMPLE = !!(PDF && ALL.length && norm(ALL[0].url) === norm(FILE));
+  if (!window.IS_SAMPLE) {
+    var st = document.createElement("style"); st.id = "gate-hide"; st.textContent = "html{visibility:hidden}";
+    document.head.appendChild(st);
+  }
+</script>
+<script type="module">
+  if (!window.IS_SAMPLE) await import("./auth-gate.js");
+</script>
+</head>
+<body>
+<div class="bar"><a href="./notes.html">← Notes</a><span id="ttl"></span></div>
+<div id="pages"></div>
+<div id="msg">Notes khul rahe hain...</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+(function () {
+  var msg = document.getElementById("msg"), box = document.getElementById("pages"), started = false;
+  document.addEventListener("contextmenu", function (e) { e.preventDefault(); });
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && "spu".indexOf(e.key.toLowerCase()) > -1) e.preventDefault();
+  });
+  function fail(t) { msg.textContent = t; msg.style.display = "block"; }
+  if (!PDF) return fail("Ye file nahi mili. Notes page se dobara kholein.");
+  document.getElementById("ttl").textContent = PDF.title || "";
+  document.title = (PDF.title || "Notes") + " | Notes Viewer";
+
+  function mark(ctx, w, h, text) {
+    ctx.save(); ctx.globalAlpha = 0.14; ctx.fillStyle = "#16233f";
+    ctx.font = "600 " + Math.max(14, Math.round(w / 26)) + "px sans-serif";
+    ctx.rotate(-Math.PI / 6);
+    var sx = ctx.measureText(text).width + w / 5, sy = h / 6;
+    for (var y = -h; y < h * 1.6; y += sy) for (var x = -w; x < w * 1.6; x += sx) ctx.fillText(text, x, y);
+    ctx.restore();
+  }
+  function start() {
+    if (started) return; started = true;
+    var label = window.IS_SAMPLE ? "upatre.online · SAMPLE" : (window.ATRE_USER && window.ATRE_USER.loginId ? window.ATRE_USER.loginId : "student") + " · upatre.online";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+    pdfjsLib.getDocument(PDF.url).promise.then(function (pdf) {
+      msg.style.display = "none";
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (!en.isIntersecting || en.target.dataset.done) return;
+          en.target.dataset.done = "1"; io.unobserve(en.target);
+          pdf.getPage(+en.target.dataset.n).then(function (page) {
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var base = page.getViewport({ scale: 1 }), cw = Math.min(box.clientWidth, 900);
+            var vp = page.getViewport({ scale: (cw / base.width) * dpr });
+            var c = document.createElement("canvas"); c.width = vp.width; c.height = vp.height;
+            var ctx = c.getContext("2d");
+            page.render({ canvasContext: ctx, viewport: vp }).promise.then(function () {
+              mark(ctx, c.width, c.height, label);
+              en.target.style.minHeight = "0"; en.target.appendChild(c);
+            });
+          });
+        });
+      }, { rootMargin: "600px 0px" });
+      for (var i = 1; i <= pdf.numPages; i++) {
+        var d = document.createElement("div"); d.className = "pg"; d.dataset.n = i; d.style.minHeight = "60vh";
+        box.appendChild(d); io.observe(d);
+      }
+    }).catch(function () { fail("PDF khul nahi paayi. Internet check karke dobara koshish karein."); });
+  }
+  if (window.IS_SAMPLE || window.ATRE_USER) start();
+  else window.addEventListener("atre-user", start);
+})();
+</script>
+</body>
+</html>

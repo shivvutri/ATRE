@@ -75,7 +75,7 @@ if (notes[qs.get("m")]) { $("info").textContent = notes[qs.get("m")]; $("info").
 // Sirf apni site ke page par wapas bhejein (open redirect se bachav)
 function nextUrl() {
   const n = qs.get("next") || "";
-  return /^[A-Za-z0-9._-]+(\?[A-Za-z0-9=&._%-]*)?$/.test(n) ? "./" + n : "./index.html";
+  return /^[A-Za-z0-9._-]+(\?[A-Za-z0-9=&._%()~-]*)?$/.test(n) ? "./" + n : "./index.html";
 }
 $("show").onclick = function () {
   const p = $("pw"), h = p.type === "password";
