@@ -298,6 +298,22 @@
     .menu-toggle{display:block;}
   }
 
+  /* ---------- Student login button + free sample ---------- */
+  .login-btn{order:2; border:1px solid #f3d9a1; color:#f3d9a1; background:none; padding:8px 14px; border-radius:8px; font-weight:600; font-size:.86rem; text-decoration:none; cursor:pointer; white-space:nowrap;}
+  .login-btn:hover{background:#f3d9a1; color:var(--navy-deep);}
+  @media (max-width:760px){ .login-btn{order:1; margin-left:auto;} .menu-toggle{order:2;} }
+  .sample-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  @media (max-width:760px){ .sample-grid{grid-template-columns:1fr;} }
+  .sample-card{background:var(--card); border:1px solid var(--line); border-radius:12px; padding:20px;}
+  .sample-card h3{font-size:1.1rem; margin-bottom:12px;}
+  .sample-row{display:flex; align-items:center; gap:12px; border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:12px;}
+  .sample-row[hidden]{display:none;}
+  .sample-row b{display:block; font-size:.93rem;}
+  .sample-row small{color:var(--ink-soft); font-size:.78rem;}
+  .sample-btn{margin-left:auto; background:var(--navy); color:#fff; text-decoration:none; padding:9px 15px; border-radius:8px; font-weight:600; font-size:.86rem; white-space:nowrap;}
+  .sample-btn:hover{background:var(--navy-deep);}
+  .sample-lock{font-size:.85rem; color:var(--ink-soft); margin:0;}
+
   /* ---------- Hero ---------- */
   .hero{background:var(--navy); position:relative; overflow:hidden;}
   .hero::before{
@@ -497,6 +513,7 @@
   footer a:hover{color:#fff;}
 </style>
 <script src="./site-config.js"></script>
+<script src="./notes-data.js"></script>
 </head>
 <body>
 
@@ -544,6 +561,7 @@
         <li><a href="#news">Exam News</a></li>
       </ul>
     </nav>
+    <a class="login-btn" id="loginBtn" href="./login.html">🔑 Student Login</a>
   </div>
 </header>
 
@@ -699,6 +717,27 @@
 
 <main>
   <div class="wrap">
+
+    <!-- ===================== Free Sample ===================== -->
+    <section id="sample">
+      <div class="section-head">
+        <span class="kicker">Free Sample</span>
+        <h2>बिना login के Sample देखें</h2>
+        <p>Notes और MCQ का एक-एक नमूना यहाँ free है। सभी Notes, MCQ sets और Full Mock Test के लिए Student Login करें।</p>
+      </div>
+      <div class="sample-grid">
+        <div class="sample-card">
+          <h3>📒 Notes Sample</h3>
+          <div class="sample-row" id="sampleNote" hidden></div>
+          <p class="sample-lock">🔒 बाकी सभी Notes login के बाद खुलेंगे।</p>
+        </div>
+        <div class="sample-card">
+          <h3>📝 MCQ Sample</h3>
+          <div class="sample-row"><div><b>Hindi Quiz Set 1</b><small>20 सवाल · Free</small></div><a class="sample-btn" href="./hindi-quiz-1.html">Try करें</a></div>
+          <p class="sample-lock">🔒 बाकी MCQ sets और Full Mock Test login के बाद।</p>
+        </div>
+      </div>
+    </section>
 
     <!-- ===================== SECTION 1: MCQ Subject Wise ===================== -->
     <section id="mcq">
@@ -916,5 +955,32 @@
   }
 </script>
 
+<script>
+  // Free sample: notes-data.js ki pehli PDF sample ke taur par dikhati hai
+  (function(){
+    if (typeof NOTES_DATA === 'undefined') return;
+    var p = null;
+    NOTES_DATA.some(function(s){ if (s.pdfs && s.pdfs.length) { p = s.pdfs[0]; return true; } });
+    var row = document.getElementById('sampleNote');
+    if (!p || !row) return;
+    var box = document.createElement('div'), b = document.createElement('b'), sm = document.createElement('small'), a = document.createElement('a');
+    b.textContent = p.title; sm.textContent = (p.pages ? p.pages + ' pages' : '') + (p.size ? ' · ' + p.size : '') + ' · Free sample';
+    a.className = 'sample-btn'; a.href = p.url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = '👁 View';
+    box.appendChild(b); box.appendChild(sm); row.appendChild(box); row.appendChild(a); row.hidden = false;
+  })();
+</script>
+<script type="module">
+  // Login hone par header ka button "Logout" ban jata hai
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+  import { firebaseConfig } from "./auth-config.js";
+  var btn = document.getElementById("loginBtn");
+  var auth = getAuth(initializeApp(firebaseConfig, "gate"));
+  onAuthStateChanged(auth, function (u) {
+    if (!u) return;
+    btn.textContent = "👤 Logout"; btn.href = "#";
+    btn.onclick = async function (e) { e.preventDefault(); localStorage.removeItem("atre_sid"); await signOut(auth); location.reload(); };
+  });
+</script>
 </body>
 </html>
