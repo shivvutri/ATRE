@@ -1,89 +1,81 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /hindi_quiz_set_1/{docId} {
-      allow read: if true;
-      allow create: if validSubmission(request.resource.data, 'hindi-quiz-1');
-      allow update, delete: if false;
+
+    // ---------- Helpers ----------
+    function signedIn() {
+      return request.auth != null;
     }
-    match /hindi_quiz_set_2/{docId} {
-      allow read: if true;
-      allow create: if validSubmission(request.resource.data, 'hindi-quiz-2');
-      allow update, delete: if false;
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
-    match /hindi_quiz_set_3/{docId} {
-      allow read: if true;
-      allow create: if validSubmission(request.resource.data, 'hindi-quiz-3');
-      allow update, delete: if false;
+    function isActiveStudent(uid) {
+      return exists(/databases/$(database)/documents/students/$(uid))
+        && get(/databases/$(database)/documents/students/$(uid)).data.active == true;
     }
-    match /hindi_quiz_set_4/{docId} {
-      allow read: if true;
-      allow create: if validSubmission(request.resource.data, 'hindi-quiz-4');
-      allow update, delete: if false;
+
+    // ---------- Quiz / mock leaderboards (pehle wale rules ki jagah) ----------
+    // Subject quizzes: 20 sawal, 60 marks. Mock tests: 120 sawal, 360 marks.
+    function isQuizCol(col) {
+      return col.matches('(hindi|maths|english|env|cdp|computer|reasoning)_quiz_set_[0-9]+');
     }
-    match /hindi_quiz_set_5/{docId} {
-      allow read: if true;
-      allow create: if validSubmission(request.resource.data, 'hindi-quiz-5');
-      allow update, delete: if false;
+    function isMockCol(col) {
+      return col.matches('mock_test_[0-9]+');
     }
-    match /mock_test_1/{docId} {
-      allow read: if true;
-      allow create: if validMockSubmission(request.resource.data, 'mock-test-1');
+    function validSubmission(d, n, maxScore) {
+      return d.keys().hasOnly([
+          'quizId','quizTitle','candidateName','rollNo','score','maxScore',
+          'correct','wrong','unanswered','answers','submittedAt'
+        ])
+        && d.quizId is string && d.quizId.size() <= 40
+        && d.quizTitle is string
+        && d.candidateName is string
+        && d.rollNo is string
+        && d.score is number
+        && d.maxScore == maxScore
+        && d.correct is number
+        && d.wrong is number
+        && d.unanswered is number
+        && d.answers is list
+        && d.candidateName.size() > 0
+        && d.candidateName.size() <= 80
+        && d.rollNo.size() <= 40
+        && d.score >= -n && d.score <= maxScore
+        && d.correct >= 0 && d.correct <= n
+        && d.wrong >= 0 && d.wrong <= n
+        && d.unanswered >= 0 && d.unanswered <= n
+        && d.correct + d.wrong + d.unanswered == n
+        && d.answers.size() == n;
+    }
+
+    match /{col}/{docId} {
+      allow read: if isQuizCol(col) || isMockCol(col);
+      allow create: if (isQuizCol(col) && validSubmission(request.resource.data, 20, 60))
+                    || (isMockCol(col) && validSubmission(request.resource.data, 120, 360));
       allow update, delete: if false;
     }
 
-    function validSubmission(d, expectedQuizId) {
-      return d.keys().hasOnly([
-        'quizId','quizTitle','candidateName','rollNo','score','maxScore',
-        'correct','wrong','unanswered','answers','submittedAt'
-      ])
-      && d.quizId == expectedQuizId
-      && d.quizTitle is string
-      && d.candidateName is string
-      && d.rollNo is string
-      && d.score is number
-      && d.maxScore == 60
-      && d.correct is number
-      && d.wrong is number
-      && d.unanswered is number
-      && d.answers is list
-      && d.candidateName.size() > 0
-      && d.candidateName.size() <= 80
-      && d.rollNo.size() <= 40
-      && d.score >= -20
-      && d.score <= 60
-      && d.correct >= 0 && d.correct <= 20
-      && d.wrong >= 0 && d.wrong <= 20
-      && d.unanswered >= 0 && d.unanswered <= 20
-      && d.correct + d.wrong + d.unanswered == 20
-      && d.answers.size() == 20;
+    // ---------- Student login system ----------
+    match /admins/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow write: if false;
     }
 
-    function validMockSubmission(d, expectedQuizId) {
-      return d.keys().hasOnly([
-        'quizId','quizTitle','candidateName','rollNo','score','maxScore',
-        'correct','wrong','unanswered','answers','submittedAt'
-      ])
-      && d.quizId == expectedQuizId
-      && d.quizTitle is string
-      && d.candidateName is string
-      && d.rollNo is string
-      && d.score is number
-      && d.maxScore == 360
-      && d.correct is number
-      && d.wrong is number
-      && d.unanswered is number
-      && d.answers is list
-      && d.candidateName.size() > 0
-      && d.candidateName.size() <= 80
-      && d.rollNo.size() <= 40
-      && d.score >= -120
-      && d.score <= 360
-      && d.correct >= 0 && d.correct <= 120
-      && d.wrong >= 0 && d.wrong <= 120
-      && d.unanswered >= 0 && d.unanswered <= 120
-      && d.correct + d.wrong + d.unanswered == 120
-      && d.answers.size() == 120;
+    match /students/{uid} {
+      allow read: if isAdmin() || (signedIn() && request.auth.uid == uid);
+      allow create, update, delete: if isAdmin();
+    }
+
+    // "Ek account, ek device": student sirf apna session likh sakta hai
+    match /sessions/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, update: if signedIn()
+        && request.auth.uid == uid
+        && isActiveStudent(uid)
+        && request.resource.data.keys().hasOnly(['sid', 'ua', 'at'])
+        && request.resource.data.sid is string;
+      allow delete: if isAdmin();
     }
   }
 }

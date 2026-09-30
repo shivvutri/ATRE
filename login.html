@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Student Login | UP Sahayak Adhyapak Bharti</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--nv:#16233f;--nvd:#0e1729;--paper:#eef1f4;--line:#d7dce2;--ink:#182238;--soft:#4a5568;--gold:#9a6b0c;--mr:#7a1f2b;--goldbg:#f5ecd8;
+--serif:"Newsreader",Georgia,serif;--sans:"IBM Plex Sans","IBM Plex Sans Devanagari",system-ui,sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;line-height:1.55;}
+.shell{width:100%;max-width:880px;display:grid;grid-template-columns:1fr 1fr;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 14px 40px rgba(14,23,41,.16);}
+@media(max-width:760px){.shell{grid-template-columns:1fr;}.side{display:none;}}
+.side{background:var(--nv);color:#fff;padding:32px 28px;display:flex;flex-direction:column;gap:20px;}
+.brand{display:flex;align-items:center;gap:11px;}
+.mk{width:42px;height:42px;border-radius:8px;background:#b8860b;color:var(--nvd);font:700 1rem var(--serif);display:flex;align-items:center;justify-content:center;}
+.brand b{display:block;font:600 1rem var(--serif);}.brand span{font-size:.74rem;color:#b9c2d6;}
+.side h2{font:600 1.45rem/1.3 var(--serif);}
+.side ul{list-style:none;display:grid;gap:11px;font-size:.88rem;color:#d6dcea;}
+.form{padding:32px;}
+.form h1{font:600 1.4rem var(--serif);margin-bottom:4px;}
+.sub{font-size:.86rem;color:var(--soft);margin-bottom:18px;}
+label{display:block;font-size:.82rem;font-weight:600;margin:12px 0 5px;}
+input{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:9px;font:400 .95rem var(--sans);color:var(--ink);}
+input:focus-visible,button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.pw{position:relative;}.pw button{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--soft);font:600 .78rem var(--sans);cursor:pointer;padding:6px;}
+.go{width:100%;margin-top:18px;padding:12px;border:0;border-radius:9px;background:var(--nv);color:#fff;font:700 .95rem var(--sans);cursor:pointer;}
+.go:hover{background:var(--nvd);}.go:disabled{opacity:.6;cursor:wait;}
+.err{margin-top:12px;font-size:.86rem;color:var(--mr);min-height:1.2em;}
+.info{background:var(--goldbg);border:1px solid #e3d3a8;border-radius:9px;padding:10px 12px;font-size:.85rem;margin-bottom:14px;}
+.hint{font-size:.78rem;color:var(--soft);margin-top:14px;text-align:center;}
+.hint a{color:var(--gold);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand"><div class="mk">UP</div><div><b>UP Sahayak Adhyapak Bharti</b><span>Assistant Teacher Recruitment</span></div></div>
+    <h2>Apni taiyari, ek jagah, ek login se</h2>
+    <ul><li>📒 Poore Notes PDF</li><li>📝 Sabhi MCQ sets</li><li>🏆 Full Mock Test leaderboard</li></ul>
+  </aside>
+  <main class="form">
+    <h1>Student Login</h1>
+    <p class="sub">Aapko diya gaya Login ID aur Password daalein.</p>
+    <div class="info" id="info" hidden></div>
+    <form id="f">
+      <label for="id">Login ID</label>
+      <input id="id" type="text" autocomplete="username" autocapitalize="none" placeholder="Jaise: mobile number ya student ID" required>
+      <label for="pw">Password</label>
+      <div class="pw"><input id="pw" type="password" autocomplete="current-password" placeholder="Aapko diya gaya password" required><button type="button" id="show">Dikhayein</button></div>
+      <button class="go" id="go" type="submit">Login karein</button>
+      <div class="err" id="err" role="alert"></div>
+    </form>
+    <p class="hint">ID ya password nahi mila? Apne teacher se sampark karein. <a href="./index.html">Home par jayein</a></p>
+  </main>
+</div>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { firebaseConfig, EMAIL_DOMAIN } from "./auth-config.js";
+
+const app = initializeApp(firebaseConfig, "gate");   // auth-gate.js wala hi naam
+const auth = getAuth(app), db = getFirestore(app);
+const $ = (i) => document.getElementById(i);
+const qs = new URLSearchParams(location.search);
+const notes = {
+  kicked: "आपका account किसी दूसरे device पर login हो गया, इसलिए यहाँ से logout कर दिया गया।",
+  off: "आपका access अभी बंद है। अपने teacher से संपर्क करें।"
+};
+if (notes[qs.get("m")]) { $("info").textContent = notes[qs.get("m")]; $("info").hidden = false; }
+
+// Sirf apni site ke page par wapas bhejein (open redirect se bachav)
+function nextUrl() {
+  const n = qs.get("next") || "";
+  return /^[A-Za-z0-9._-]+(\?[A-Za-z0-9=&._%-]*)?$/.test(n) ? "./" + n : "./index.html";
+}
+$("show").onclick = function () {
+  const p = $("pw"), h = p.type === "password";
+  p.type = h ? "text" : "password"; this.textContent = h ? "Chhupayein" : "Dikhayein";
+};
+$("f").onsubmit = async (e) => {
+  e.preventDefault();
+  const id = $("id").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+  $("err").textContent = ""; $("go").disabled = true;
+  try {
+    const c = await signInWithEmailAndPassword(auth, id + "@" + EMAIL_DOMAIN, $("pw").value);
+    const sid = crypto.randomUUID();
+    // Yahi "ek account, ek device" ka kaam hai: nayi sid likhte hi purana device logout ho jata hai
+    await setDoc(doc(db, "sessions", c.user.uid), { sid, ua: navigator.userAgent.slice(0, 120), at: serverTimestamp() });
+    localStorage.setItem("atre_sid", sid);
+    location.replace(nextUrl());
+  } catch (err) {
+    try { await signOut(auth); } catch (x) {}
+    const c = err.code || "";
+    $("err").textContent =
+      /invalid-credential|wrong-password|user-not-found|invalid-email/.test(c) ? "Login ID ya Password galat hai." :
+      c === "auth/too-many-requests" ? "Bahut zyada koshish ho gayi. Thodi der baad dobara try karein." :
+      /permission/.test(c) ? "Aapka access band hai. Teacher se sampark karein." :
+      "Login nahi ho paya. Internet check karke dobara koshish karein.";
+    $("go").disabled = false;
+  }
+};
+</script>
+</body>
+</html>

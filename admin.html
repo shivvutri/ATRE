@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="hi-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Student Accounts</title>
+<style>
+:root{--nv:#16233f;--paper:#eef1f4;--card:#fff;--line:#d7dce2;--ink:#182238;--soft:#4a5568;--gold:#9a6b0c;--ok:#1c6b45;--mr:#7a1f2b;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,"Noto Sans Devanagari",sans-serif;background:var(--paper);color:var(--ink);line-height:1.5;padding:18px;}
+.wrap{max-width:900px;margin:auto;}
+h1{font-size:1.3rem;margin-bottom:14px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:16px;}
+.card h2{font-size:1.02rem;margin-bottom:8px;}
+label{display:block;font-size:.84rem;font-weight:600;margin:10px 0 4px;}
+input,textarea{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink);}
+textarea{min-height:110px;font-family:ui-monospace,monospace;font-size:.86rem;}
+button{background:var(--nv);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-weight:600;font-size:.88rem;font-family:inherit;cursor:pointer;margin-top:12px;}
+button.sec{background:#fff;color:var(--nv);border:1px solid var(--line);}
+button:disabled{opacity:.55;cursor:wait;}
+.hint{font-size:.8rem;color:var(--soft);margin-top:6px;}
+.msg{margin-top:10px;font-size:.86rem;color:var(--mr);}
+table{width:100%;border-collapse:collapse;font-size:.86rem;margin-top:8px;}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);}
+th{font-size:.76rem;color:var(--soft);text-transform:uppercase;}
+.ok{color:var(--ok);font-weight:600;}.bad{color:var(--mr);font-weight:600;}
+.top{display:flex;justify-content:space-between;align-items:center;}
+.top button{margin:0;}
+.scroll{overflow-x:auto;}
+[hidden]{display:none!important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Student Accounts — Admin</h1>
+
+  <!-- Admin login -->
+  <div class="card" id="loginBox">
+    <h2>Admin login</h2>
+    <label for="ae">Admin email</label><input id="ae" type="email" autocomplete="username">
+    <label for="ap">Password</label><input id="ap" type="password" autocomplete="current-password">
+    <button id="aLogin">Login</button>
+    <div class="msg" id="aMsg"></div>
+  </div>
+
+  <div id="panel" hidden>
+    <div class="card top"><div><b id="who"></b><div class="hint">Admin login ho gaya.</div></div><button class="sec" id="aOut">Logout</button></div>
+
+    <div class="card">
+      <h2>Naye students banayein</h2>
+      <label for="lines">Har line mein ek student: <code>Naam, LoginID, Password</code></label>
+      <textarea id="lines" placeholder="Priya Sharma, 9876543210&#10;Rohit Verma, 9123456780, mypass77"></textarea>
+      <div class="hint">Password likhna zaroori nahi. Khali chhodne par 8 akshar ka password apne aap ban jayega. Login ID mein sirf a-z, 0-9, . _ - chalenge.</div>
+      <button id="create">Accounts banayein</button>
+      <div class="msg" id="cMsg"></div>
+      <div id="results" hidden>
+        <div class="hint" style="color:var(--mr);font-weight:600">Password sirf abhi dikhega. Yeh dobara nahi dikh sakta, abhi copy kar lein.</div>
+        <div class="scroll"><table><thead><tr><th>Naam</th><th>Login ID</th><th>Password</th><th>Status</th></tr></thead><tbody id="rBody"></tbody></table></div>
+        <button class="sec" id="copyAll">Sab copy karein</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Sabhi students</h2>
+      <button class="sec" id="reload" style="margin-top:0">Refresh</button>
+      <div class="scroll"><table><thead><tr><th>Naam</th><th>Login ID</th><th>Access</th><th></th></tr></thead><tbody id="sBody"></tbody></table></div>
+      <div class="hint">"Band karein" par student ka access turant ruk jayega. Password badalna ho to Firebase console mein us user ko delete karke yahan se dobara banayein.</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+/* ====== YAHAN APNA firebaseConfig PASTE KAREIN ====== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBBQlECZV2bZs3zyP9OQODG2UiRMaKEv1E",
+  authDomain: "atre-fd3a8.firebaseapp.com",
+  projectId: "atre-fd3a8",
+  appId: "1:709611054157:web:93aeb11f2f13851cd72804"
+};
+const EMAIL_DOMAIN = "upatre.online";   // Login ID ke peeche lagne wala nakli email domain
+/* ==================================================== */
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app), db = getFirestore(app);
+// Doosra app: naye student ka account banane par admin logout na ho
+const auth2 = getAuth(initializeApp(firebaseConfig, "creator"));
+
+const $ = id => document.getElementById(id);
+const cell = (tr, text, cls) => { const td = document.createElement("td"); td.textContent = text; if (cls) td.className = cls; tr.appendChild(td); return td; };
+
+$("aLogin").onclick = async () => {
+  $("aMsg").textContent = "";
+  try { await signInWithEmailAndPassword(auth, $("ae").value.trim(), $("ap").value); }
+  catch (e) { $("aMsg").textContent = "Login nahi hua: email ya password galat hai."; }
+};
+$("aOut").onclick = () => signOut(auth);
+
+onAuthStateChanged(auth, async u => {
+  if (!u) { $("loginBox").hidden = false; $("panel").hidden = true; return; }
+  let ok = false;
+  try { ok = (await getDoc(doc(db, "admins", u.uid))).exists(); } catch (e) {}
+  if (!ok) { $("aMsg").textContent = "Yeh account admin nahi hai."; await signOut(auth); return; }
+  $("who").textContent = u.email;
+  $("loginBox").hidden = true; $("panel").hidden = false;
+  loadStudents();
+});
+
+function genPw() {
+  const chars = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  const a = new Uint32Array(8); crypto.getRandomValues(a);
+  return Array.from(a, n => chars[n % chars.length]).join("");
+}
+const cleanId = s => s.trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
+
+let lastRows = [];
+$("create").onclick = async () => {
+  const lines = $("lines").value.split("\n").map(l => l.trim()).filter(Boolean);
+  if (!lines.length) { $("cMsg").textContent = "Kam se kam ek line likhein."; return; }
+  $("create").disabled = true; $("cMsg").textContent = "Ban rahe hain..."; $("rBody").innerHTML = "";
+  lastRows = [];
+  for (const line of lines) {
+    const [name = "", idRaw = "", pwRaw = ""] = line.split(",").map(x => x.trim());
+    const id = cleanId(idRaw), pw = pwRaw || genPw();
+    const tr = document.createElement("tr");
+    cell(tr, name); cell(tr, id); cell(tr, pw);
+    try {
+      if (!name || id.length < 3) throw { code: "naam ya ID kam hai" };
+      if (pw.length < 6) throw { code: "password 6 se chhota" };
+      const cred = await createUserWithEmailAndPassword(auth2, id + "@" + EMAIL_DOMAIN, pw);
+      await setDoc(doc(db, "students", cred.user.uid), { name, loginId: id, active: true, createdAt: serverTimestamp() });
+      await signOut(auth2);
+      cell(tr, "Ban gaya", "ok");
+      lastRows.push(name + " | " + id + " | " + pw);
+    } catch (e) {
+      const why = e.code === "auth/email-already-in-use" ? "yeh ID pehle se hai" : (e.code || "error");
+      cell(tr, "Nahi bana: " + why, "bad");
+    }
+    $("rBody").appendChild(tr);
+  }
+  $("results").hidden = false; $("cMsg").textContent = "";
+  $("create").disabled = false; loadStudents();
+};
+$("copyAll").onclick = async () => {
+  try { await navigator.clipboard.writeText("Naam | Login ID | Password\n" + lastRows.join("\n")); $("copyAll").textContent = "Copy ho gaya"; }
+  catch (e) { $("copyAll").textContent = "Copy nahi hua, table se utha lein"; }
+};
+
+async function loadStudents() {
+  const body = $("sBody"); body.innerHTML = "";
+  const snap = await getDocs(collection(db, "students"));
+  const list = snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  for (const s of list) {
+    const tr = document.createElement("tr");
+    cell(tr, s.name); cell(tr, s.loginId);
+    cell(tr, s.active ? "Chalu" : "Band", s.active ? "ok" : "bad");
+    const td = document.createElement("td"), b = document.createElement("button");
+    b.className = "sec"; b.style.margin = "0"; b.textContent = s.active ? "Band karein" : "Chalu karein";
+    b.onclick = async () => { b.disabled = true; await updateDoc(doc(db, "students", s.id), { active: !s.active }); loadStudents(); };
+    td.appendChild(b); tr.appendChild(td); body.appendChild(tr);
+  }
+  if (!list.length) { const tr = document.createElement("tr"); cell(tr, "Abhi koi student nahi hai."); body.appendChild(tr); }
+}
+$("reload").onclick = loadStudents;
+</script>
+</body>
+</html>
