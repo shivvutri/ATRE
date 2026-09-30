@@ -261,7 +261,7 @@ const NOTES_DATA = [
       "दंड एवं पुरस्कार व्यवस्था"
     ],
     pdfs: [
-      // { title: "Life Skills Notes", url: "notes-pdf/life_skills.pdf", pages: 12, size: "1.4 MB", tag: "" }
+      { title: "Life Skills Notes", url: "notes-pdf/life-skills-notes.pdf", pages: 18, size: "127 KB", tag: "New" }
     ]
   }
 
