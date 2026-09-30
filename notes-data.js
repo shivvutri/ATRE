@@ -66,8 +66,8 @@ const NOTES_DATA = [
         size: "730 KB",
         tag: "" 
       },
-      { title: "भारतीय संस्कृति एवं कला — Complete Notes", url: "notes-pdf/Bharatiya_Sanskriti_Kala.pdf", pages: 5, size: "65 KB", tag: "" },
-      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein.pdf", pages: 4, size: "61 KB", tag: "" },
+      { title: "भारतीय संस्कृति एवं कला — Complete Notes", url: "notes-pdf/Bharatiya_Sanskriti_evam_Kala_Notes.pdf", pages: 5, size: "65 KB", tag: "" },
+      { title: "स्थान, व्यक्तित्व, रचनाएं — Complete Notes", url: "notes-pdf/Sthan_Vyaktitva_Rachnayein_Notes.pdf", pages: 4, size: "61 KB", tag: "" },
        { title: "Current Affairs - Complete Notes", url: "notes-pdf/Current-affairs.pdf", pages: 30, size: "8.3 MB", tag: "New" }
     ]
   },
@@ -133,7 +133,7 @@ const NOTES_DATA = [
       "पर्यावरण एवं प्राकृतिक संसाधन"
     ],
     pdfs: [
-      { title: "विज्ञान Short Notes", url: "notes-pdf/science.pdf", pages: 18, size: "2.0 MB", tag: "" }
+      { title: "विज्ञान Short Notes", url: "notes-pdf/Science.pdf", pages: 18, size: "2.0 MB", tag: "" }
     ]
   },
 
@@ -219,7 +219,7 @@ const NOTES_DATA = [
       "दिव्यांग छात्रों हेतु विशेष व्यवस्था"
     ],
     pdfs: [
-      { title: "बाल मनोविज्ञान Notes", url: "notes-pdf/child-psychology.pdf", pages: 11, size: "1.7 MB", tag: "" }
+      { title: "बाल मनोविज्ञान Notes", url: "notes-pdf/child-pshychology.pdf", pages: 11, size: "1.7 MB", tag: "" }
     ]
   },
 
