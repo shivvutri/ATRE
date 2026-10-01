@@ -133,7 +133,8 @@ const NOTES_DATA = [
       "पर्यावरण एवं प्राकृतिक संसाधन"
     ],
     pdfs: [
-      { title: "विज्ञान Short Notes", url: "notes-pdf/Science.pdf", pages: 18, size: "2.0 MB", tag: "" }
+      { title: "विज्ञान Short Notes", url: "notes-pdf/Science.pdf", pages: 18, size: "2.0 MB", tag: "" },
+      { title: "विज्ञान Complete detailed notes", url: "notes-pdf/vigyan-notes.pdf", pages: 29, size: "1.1 MB", tag: "updated" }
     ]
   },
 
@@ -177,7 +178,8 @@ const NOTES_DATA = [
     pdfs: [
       { title: "भूगोल सम्पूर्ण नोट्स", url: "notes-pdf/geography.pdf", pages: 47, size: "4.4 MB", tag: "New" },
       { title: "भारतीय स्वतंत्रता संग्राम समाज सुधारक सांस्कृतिक विरासत", url: "notes-pdf/history.pdf", pages: 30, size: "7.4 MB", tag: "New" },
-      { title: "भारत की राज्य व्यवस्था एवं संविधान", url: "notes-pdf/Polity.pdf", pages: 30, size: "4.2 MB", tag: "New" }
+      { title: "भारत की राज्य व्यवस्था एवं संविधान", url: "notes-pdf/Polity.pdf", pages: 30, size: "4.2 MB", tag: "New" },
+      { title: "पर्यावरण एवं वायुमंडल", url: "notes-pdf/paryavaran-notes.pdf", pages: 11, size: "535 KB", tag: "New" }
     ]
   },
 
